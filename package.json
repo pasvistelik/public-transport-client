@@ -1,0 +1,35 @@
+{
+  "name": "public-transport-client",
+  "version": "1.0.0",
+  "description": "Module for running public-transport app on a client.",
+  "main": "lib/client.js",
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "preinstall": "npm run build",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "public-transport-initialize-data": "https://github.com/pasvistelik/public-transport-initialize-data",
+    "public-transport-find-optimal-ways": "https://github.com/pasvistelik/public-transport-find-optimal-ways"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pasvistelik/public-transport-client.git"
+  },
+  "keywords": [
+    "public-transport",
+    "initializing-module"
+  ],
+  "author": "Andrey Pasvistelik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pasvistelik/public-transport-client/issues"
+  },
+  "homepage": "https://github.com/pasvistelik/public-transport-client#readme",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "geo-coords-distance": "^2.0.1"
+  }
+}

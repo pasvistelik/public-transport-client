@@ -1,5 +1,5 @@
 import JsonDataStorage from './jsonDataStorage';
-import initialize from './../public-transport-initialize-data/initialize';
+import initialize from 'public-transport-initialize-data';
 import ApiConfig from './config';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

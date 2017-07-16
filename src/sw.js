@@ -1,9 +1,9 @@
 import DataProvider from './dataProvider';
 import ApiConfig from './config';
-import OptimalRoutesCollection from './../public-transport-find-optimal-ways/optimalRoutesCollection';
+import OptimalRoutesCollection from 'public-transport-find-optimal-ways/lib/optimalRoutesCollection';
 //import AppClient from './client';
 //let s = '123hello123';
-//console.log('111111111111111111111111111111111111111111');
+console.log('Hello from SW...');
 
 
 const APP_CACHE_NAME = 'mosm-app-v1';
@@ -31,14 +31,18 @@ self.addEventListener('install', function(event) {
     });
 
   event.waitUntil(cachePromise);
+  //event.waitUntil(self.skipWaiting()); // Activate worker immediately
 });
 
 self.addEventListener('activate', function(event) {
+  DataProvider.loadDataAndInitialize();
+
+  //event.waitUntil(self.clients.claim()); // Become available to all pages
   //console.log('!!!!!!!!!activate');
 
   /**/
 
-  DataProvider.loadDataAndInitialize();
+  
 
 });
 /*
@@ -68,7 +72,10 @@ self.addEventListener('message', function(event) {
     }
   }
   else if(event.data.requestType === 'optimalWay'){
-    //console.log('SW: request for optimalWay.');
+    console.log('SW: request for optimalWay.');
+
+    DataProvider.loadDataAndInitialize();
+
     var params = event.data.params;
     var rejected, resolved;
     try {
@@ -81,8 +88,9 @@ self.addEventListener('message', function(event) {
         params.goingSpeed,
         params.dopTimeMinutes
       );
+      //console.log('res = ' + res);
       resolved = res.getOptimalWays();
-      //console.log(resolved);
+      //console.log('resolved = ' + resolved);
     } catch(e) {
       console.log(e);
       rejected = e;
@@ -110,24 +118,19 @@ self.addEventListener('message', function(event) {
 
 self.addEventListener('fetch', function(event) {
   const { url } = event.request;
-  try{
-    event.respondWith(
-      caches.match(event.request)
-        .then(function(response) {
-          // Cache hit - return response
-          if (response) {
-            return response;
-          }
-          caches.open(TILE_CACHE_NAME).then(cache => cache.add(url));
-
-          return fetch(event.request);
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        // Cache hit - return response
+        if (response) {
+          return response;
         }
-      )
-    );
-  }
-  catch(e){
-    return;
-  }
+        caches.open(TILE_CACHE_NAME).then(cache => cache.add(url));
+
+        return fetch(event.request);
+      }
+    )
+  );
 });
 
 
