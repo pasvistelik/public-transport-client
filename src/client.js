@@ -92,8 +92,8 @@ class AppClient {
     static async findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
         var findedOptimalWays = null;
         try { // Пробуем получить оптимальные пути с сервера.
-        //    findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
-        //} catch (e) { // Иначе выполняем все расчеты на клиенте.
+            findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+        } catch (e) { // Иначе выполняем все расчеты на клиенте.
             findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
         } finally{
             if (findedOptimalWays != null && findedOptimalWays.length !== 0) {
