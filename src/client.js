@@ -103,8 +103,21 @@ class AppClient {
     static toPosition = null;
     static myStartTime = 0;
     static types = ["bus", "trolleybus"];
-    static my_speed = 5;
-    static my_dopTimeMinutes = 2;
+
+    static get goingSpeed(){
+        var value = localStorage["goingSpeed"];
+        return (value == null) ? (localStorage["goingSpeed"] = 5) : value;
+    }
+    static set goingSpeed(value){
+        if (value > 0) localStorage["goingSpeed"] = value;
+    }
+    static get dopTimeMinutes(){
+        var value = localStorage["dopTimeMinutes"];
+        return (value == null) ? (localStorage["dopTimeMinutes"] = 3) : value;
+    }
+    static set dopTimeMinutes(value){
+        if (value >= 0) localStorage["dopTimeMinutes"] = value;
+    }
 
 
     // Find optimal ways between two points. The start time, reserved time, going speed and transport types are known.
