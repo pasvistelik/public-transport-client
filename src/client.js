@@ -71,9 +71,28 @@ class AppClient {
     static myCurrentFindedPosition = null;
 
     static findedOptimalWays = null;
-    /*static totalTimePercent = 1;
-    static totalGoingTimePercent = 1;
-    static totalTransportChangingCountPercent = 1;*/
+
+    static get totalTimePercentValue(){
+        var value = localStorage["totalTimePercentValue"];
+        return (value == null) ? (localStorage["totalTimePercentValue"] = 1) : value;
+    }
+    static set totalTimePercentValue(value){
+        if (value >= 0 && value <= 1) localStorage["totalTimePercentValue"] = value;
+    }
+    static get totalGoingTimePercentValue(){
+        var value = localStorage["totalGoingTimePercentValue"];
+        return (value == null) ? (localStorage["totalGoingTimePercentValue"] = 1) : value;
+    }
+    static set totalGoingTimePercentValue(value){
+        if (value >= 0 && value <= 1) localStorage["totalGoingTimePercentValue"] = value;
+    }
+    static get totalTransportChangingCountPercentValue(){
+        var value = localStorage["totalTransportChangingCountPercentValue"];
+        return (value == null) ? (localStorage["totalTransportChangingCountPercentValue"] = 1) : value;
+    }
+    static set totalTransportChangingCountPercentValue(value){
+        if (value >= 0 && value <= 1) localStorage["totalTransportChangingCountPercentValue"] = value;
+    }
 
     static minimalTimeSeconds = 0;
     static minimalGoingTimeSeconds = 0;
@@ -116,9 +135,9 @@ class AppClient {
     // Sort the finded ways with the importance of each criterion.
     static customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue) {
         if (AppClient.findedOptimalWays != null) {
-            /*AppClient.totalTimePercent = totalTimePercentValue;
-            AppClient.totalGoingTimePercent = totalGoingTimePercentValue;
-            AppClient.totalTransportChangingCountPercent = totalTransportChangingCountPercentValue;*/
+            AppClient.totalTimePercentValue = totalTimePercentValue;
+            AppClient.totalGoingTimePercentValue = totalGoingTimePercentValue;
+            AppClient.totalTransportChangingCountPercentValue = totalTransportChangingCountPercentValue;
 
             let sortedArr = [];
             let newSortedFindedWays = [];
