@@ -11,12 +11,16 @@ if ('serviceWorker' in navigator) {
   console.log('ServiceWorker was finded in navigator.');
   const registration = runtime.register();
   
-  registration.then(function() {
+  registration.then(async function() {
     console.log('ServiceWorker registered.');
     //console.log(registration);
     //console.log(navigator.serviceWorker);
 
+    await navigator.serviceWorker.ready;
+    await navigator.serviceWorker.getRegistration();
+
     var controller = navigator.serviceWorker.controller;
+    
     if (controller != null) {
         controller.postMessage("no-kill-sw");
         setInterval(function(){
@@ -35,7 +39,7 @@ if ('serviceWorker' in navigator) {
         });
     }
     else {
-
+        console.log("navigator.serviceWorker.controller is null.")
     }
   })
 }
@@ -126,7 +130,7 @@ class AppClient {
         try { // Пробуем получить оптимальные пути с сервера.
             findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
         } catch (e) { // Иначе выполняем все расчеты на клиенте.
-            console.log(e);
+            //console.log(e);
             try {
                 findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
             }
@@ -347,7 +351,7 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
         }
     }
     
-    console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
+    if(AppClient.findedOptimalWays != null) console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
 
     return AppClient.findedOptimalWays;
 }
@@ -364,11 +368,12 @@ async function getOptimalRoutesCollectionFromSw(params) {
         request.onsuccess = function(event) {
             resolve(event.target.result);
         }*/
-    });
-    navigator.serviceWorker.controller.postMessage({
+        navigator.serviceWorker.controller.postMessage({
             requestType: 'optimalWay',
             params: params
         }); 
+    });
+    
     //console.log(promise);
     return await promise;
 }

@@ -23,22 +23,26 @@ self.addEventListener('install', function(event) {
   // Perform install steps
   const cachePromise = caches.open(APP_CACHE_NAME)
     .then(function(cache) {
-      console.log('install: opened cache');
+      //console.log('install: opened cache');
       return cache.addAll(urlsToCache);
     })
     .then(() => {
-      console.log('install: added all urls to cache');
+      //console.log('install: added all urls to cache');
     });
 
   event.waitUntil(cachePromise);
-  //event.waitUntil(self.skipWaiting()); // Activate worker immediately
+  event.waitUntil(self.skipWaiting()); // Activate worker immediately
+  
+  //console.log('!!!!!!!!!installed');
 });
 
-self.addEventListener('activate', function(event) {
-  DataProvider.loadDataAndInitialize();
-
-  //event.waitUntil(self.clients.claim()); // Become available to all pages
-  //console.log('!!!!!!!!!activate');
+self.addEventListener('activate', async function(event) {
+  
+  event.waitUntil(self.clients.claim()); // Become available to all pages
+  await DataProvider.loadDataAndInitialize();
+  //console.log('!!!!!!!!!activated');
+  //
+  //console.log('!!!!!!!!!activated1');
 
   /**/
 
@@ -55,7 +59,7 @@ setInterval(function() {
 
 var clients = [];
 
-self.addEventListener('message', function(event) {
+self.addEventListener('message', async function(event) {
   var sender = event.source;
   //console.log(event.data);
   if(event.data === 'no-kill-sw') {
@@ -72,9 +76,9 @@ self.addEventListener('message', function(event) {
     }
   }
   else if(event.data.requestType === 'optimalWay'){
-    console.log('SW: request for optimalWay.');
+    //console.log('SW: request for optimalWay.');
 
-    DataProvider.loadDataAndInitialize();
+    await DataProvider.loadDataAndInitialize();
 
     var params = event.data.params;
     var rejected, resolved;
