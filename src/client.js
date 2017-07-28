@@ -126,7 +126,13 @@ class AppClient {
         try { // Пробуем получить оптимальные пути с сервера.
             findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
         } catch (e) { // Иначе выполняем все расчеты на клиенте.
-            findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+            console.log(e);
+            try {
+                findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+            }
+            catch(ex){
+                console.log(ex);
+            }
         } finally{
             if (findedOptimalWays != null && findedOptimalWays.length !== 0) {
                 AppClient.findedOptimalWays = findedOptimalWays;
@@ -319,20 +325,26 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
         AppClient.findedOptimalWays = await getOptimalRoutesCollectionFromSw(params);
         if(AppClient.findedOptimalWays == null) throw new Error();
     } catch (e){
-        console.log('Start counting without using SW.');
-        await DataProvider.loadDataAndInitialize();
-        var res = new OptimalRoutesCollection(
-            DataProvider.getAllStations(), 
-            params.startOptimalRoutePoint, 
-            params.finalOptimalRoutePoint, 
-            params.startTime,
-            params.transportTypes,
-            params.goingSpeed,
-            params.dopTimeMinutes
-        );
-        console.log(res);
-        AppClient.findedOptimalWays = res.getOptimalWays();
-        console.log(AppClient.findedOptimalWays);
+        console.log(e);
+        try{
+            console.log('Start counting without using SW.');
+            await DataProvider.loadDataAndInitialize();
+            var res = new OptimalRoutesCollection(
+                DataProvider.getAllStations(), 
+                params.startOptimalRoutePoint, 
+                params.finalOptimalRoutePoint, 
+                params.startTime,
+                params.transportTypes,
+                params.goingSpeed,
+                params.dopTimeMinutes
+            );
+            console.log(res);
+            AppClient.findedOptimalWays = res.getOptimalWays();
+            console.log(AppClient.findedOptimalWays);
+        }
+        catch (ex){
+            console.log(ex);
+        }
     }
     
     console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
