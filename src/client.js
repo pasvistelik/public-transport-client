@@ -1,4 +1,7 @@
-﻿import runtime from 'serviceworker-webpack-plugin/lib/runtime';
+﻿require("babel-core/register");
+require("babel-polyfill");
+
+import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import OptimalRoutesCollection from 'public-transport-find-optimal-ways/lib/optimalRoutesCollection';
 import DataProvider from './dataProvider';
 import ApiConfig from './config';
