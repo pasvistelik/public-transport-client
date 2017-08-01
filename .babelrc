@@ -4,6 +4,7 @@
   ],
   "plugins": [
     "transform-class-properties",
-    "transform-regenerator"
+    "transform-regenerator",
+    "babel-polyfill"
   ]
 }
