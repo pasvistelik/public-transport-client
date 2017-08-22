@@ -204,7 +204,11 @@ class AppClient {
         if (navigator.geolocation) {
             async function getCurrentPosition() {
                 var promise = new Promise(function (resolve, reject) {
-                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        timeout: 60000,
+                        enableHighAccuracy: true,
+                        maximumAge: Infinity
+                    });
                 });
                 return await promise;
             }
@@ -234,6 +238,7 @@ class AppClient {
 
             return resultCoords;
         }
+        console.log("navigator.geolocation not supported.");
         return null;
     }
 
