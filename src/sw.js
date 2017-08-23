@@ -6,8 +6,7 @@ import OptimalRoutesCollection from 'public-transport-find-optimal-ways/lib/opti
 console.log('Hello from SW...');
 
 
-const APP_CACHE_NAME = 'mosm-app-v1';
-const TILE_CACHE_NAME = 'mosm-tiles-v1';
+const CACHE_NAME = 'mosm-app-v1';
 
 const urlsToCache = [
   '/',
@@ -23,7 +22,20 @@ const urlsToCache = [
 
 self.addEventListener('install', function(event) {
   // Perform install steps
-  const cachePromise = caches.open(APP_CACHE_NAME)
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(function(cache) {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
+  event.waitUntil(self.skipWaiting());
+});
+
+
+/*self.addEventListener('install', function(event) {
+  // Perform install steps
+  const cachePromise = caches.open(CACHE_NAME)
     .then(function(cache) {
       //console.log('install: opened cache');
       return cache.addAll(urlsToCache);
@@ -36,7 +48,7 @@ self.addEventListener('install', function(event) {
   event.waitUntil(self.skipWaiting()); // Activate worker immediately
   
   //console.log('!!!!!!!!!installed');
-});
+});*/
 
 self.addEventListener('activate', async function(event) {
   
@@ -121,8 +133,8 @@ self.addEventListener('message', async function(event) {
 });
 
 
-
-self.addEventListener('fetch', function(event) {
+/////////////////////////////222222222222222222222222222222222222222222222222222222222222222222222222222//////////////////////////////////
+/*self.addEventListener('fetch', function(event) {
   const { url } = event.request;
   event.respondWith(
     caches.match(event.request)
@@ -131,11 +143,28 @@ self.addEventListener('fetch', function(event) {
         if (response) {
           return response;
         }
-        caches.open(TILE_CACHE_NAME).then(cache => cache.add(url));
+        caches.open(CACHE_NAME).then(cache => cache.add(url));
 
         return fetch(event.request);
       }
     )
+  );
+});*/
+
+
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.match(event.request).then(function (response) {
+        return response || fetch(event.request.clone()).then(function(response) {
+          console.dir(response);
+          console.log('hi');
+          cache.put(event.request.clone(), response.clone());
+          return response;
+        });
+      });
+    })
   );
 });
 
