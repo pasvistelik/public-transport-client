@@ -35,7 +35,7 @@ self.addEventListener('install', function(event) {
   console.log('ServiceWorker installed.');
 
   // Perform install steps
-  /*var cachePromise = */caches.open(CACHE_NAME)
+  var cachePromise = caches.open(CACHE_NAME)
     .then(function(cache) {
       console.log('install: opened cache');
       return cache.addAll(urlsToCache);
@@ -44,17 +44,17 @@ self.addEventListener('install', function(event) {
       console.log('install: added all urls to cache');
     });
 
-  //event.waitUntil(cachePromise);
-  event.waitUntil(self.skipWaiting()); // Activate worker immediately
+  event.waitUntil(cachePromise);
+  //event.waitUntil(self.skipWaiting()); // Activate worker immediately
   
   
 });
 
 self.addEventListener('activate', async function(event) {
   console.log('ServiceWorker activated.');
-
+await DataProvider.loadDataAndInitialize();
   event.waitUntil(self.clients.claim()); // Become available to all pages
-  await DataProvider.loadDataAndInitialize();
+  
 });
 
 var clients = [];
