@@ -15,9 +15,7 @@ const urlsToCache = [
   '/asset-manifest.json',
   '/static/js/bundle.js',
   '/static/css/style.css',
-  //ApiConfig.apiGetStationsUrl,
-  //ApiConfig.apiGetRoutesUrl,
-  //ApiConfig.apiGetTimetablesUrl
+  '/sw.js'
 ];
 
 /*self.addEventListener('install', function(event) {
@@ -32,61 +30,34 @@ const urlsToCache = [
   event.waitUntil(self.skipWaiting());
 });*/
 
-/*2222222222222222222222222222222222222222222222222222222222222222222222222
+
 self.addEventListener('install', function(event) {
+  console.log('ServiceWorker installed.');
+
   // Perform install steps
-  const cachePromise = caches.open(CACHE_NAME)
-    .then(function(cache) {
-      console.log('install: opened cache');
-      return cache.addAll(urlsToCache);
-    })
-    .then(() => {
-      console.log('install: added all urls to cache');
-    });
+  var cachePromise = caches.open(CACHE_NAME);
+  console.log(cachePromise);
+  
+  cachePromise.then(function(cache) {
+    console.log('install: opened cache');
+    return cache.addAll(urlsToCache);
+  })
+  .then(() => {
+    console.log('install: added all urls to cache');
+  });
 
   event.waitUntil(cachePromise);
   event.waitUntil(self.skipWaiting()); // Activate worker immediately
   
-  console.log('ServiceWorker installed.');
-});*/
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open('airhorner').then(cache => {
-      return cache.addAll(urlsToCache)
-      .then(() => self.skipWaiting());
-    })
-  )
-});
-
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
-  );
+  
 });
 
 self.addEventListener('activate', async function(event) {
-  
+  console.log('ServiceWorker activated.');
+
   event.waitUntil(self.clients.claim()); // Become available to all pages
   await DataProvider.loadDataAndInitialize();
-  //console.log('!!!!!!!!!activated');
-  //
-  //console.log('!!!!!!!!!activated1');
-
-  /**/
-
-  
-
 });
-/*
-var test = 0;
-setInterval(function() {
-  test++
-}, 1000)
-*/
-//var ok = true;
 
 var clients = [];
 
@@ -136,21 +107,10 @@ self.addEventListener('message', async function(event) {
       });
     }
   }
-  /*if(ok) {
-    //ok = false;
-    setInterval(function() {
-      sender.postMessage({
-        message: test
-      });
-    }, 1000)
-    //if (event.waitUntil) {
-    //  event.waitUntil(promise);
-    //}
-  }*/
 });
 
 
-/////////////////////////////111111222222222222222222222222222222222222222222222222222222222222222222222222222//////////////////////////////////
+/////////////////////////////222222222222222222222222222222222222222222222222222222222222222222222222222//////////////////////////////////
 /*self.addEventListener('fetch', function(event) {
   const { url } = event.request;
   event.respondWith(
@@ -169,21 +129,20 @@ self.addEventListener('message', async function(event) {
 });*/
 
 
-//22222222222222222222222222222222222222222222222222222222222222
-/*self.addEventListener('fetch', function(event) {
+
+self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request.clone()).then(function(response) {
           console.dir(response);
-          console.log('hi');
           cache.put(event.request.clone(), response.clone());
           return response;
         });
       });
     })
   );
-});*/
+});
 
 
 
