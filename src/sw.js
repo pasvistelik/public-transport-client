@@ -11,7 +11,9 @@ const TILE_CACHE_NAME = 'mosm-tiles-v1';
 
 const urlsToCache = [
   '/',
+  '/index.html',
   '/favicon.ico',
+  '/asset-manifest.json',
   '/static/js/bundle.js',
   '/static/css/style.css',
   //ApiConfig.apiGetStationsUrl,
