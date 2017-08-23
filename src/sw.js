@@ -32,7 +32,7 @@ const urlsToCache = [
   event.waitUntil(self.skipWaiting());
 });*/
 
-
+/*2222222222222222222222222222222222222222222222222222222222222222222222222
 self.addEventListener('install', function(event) {
   // Perform install steps
   const cachePromise = caches.open(CACHE_NAME)
@@ -48,6 +48,23 @@ self.addEventListener('install', function(event) {
   event.waitUntil(self.skipWaiting()); // Activate worker immediately
   
   console.log('ServiceWorker installed.');
+});*/
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open('airhorner').then(cache => {
+      return cache.addAll(urlsToCache)
+      .then(() => self.skipWaiting());
+    })
+  )
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
 });
 
 self.addEventListener('activate', async function(event) {
@@ -133,7 +150,7 @@ self.addEventListener('message', async function(event) {
 });
 
 
-/////////////////////////////222222222222222222222222222222222222222222222222222222222222222222222222222//////////////////////////////////
+/////////////////////////////111111222222222222222222222222222222222222222222222222222222222222222222222222222//////////////////////////////////
 /*self.addEventListener('fetch', function(event) {
   const { url } = event.request;
   event.respondWith(
@@ -152,8 +169,8 @@ self.addEventListener('message', async function(event) {
 });*/
 
 
-
-self.addEventListener('fetch', function(event) {
+//22222222222222222222222222222222222222222222222222222222222222
+/*self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
@@ -166,7 +183,7 @@ self.addEventListener('fetch', function(event) {
       });
     })
   );
-});
+});*/
 
 
 
