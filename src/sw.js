@@ -20,7 +20,7 @@ const urlsToCache = [
   //ApiConfig.apiGetTimetablesUrl
 ];
 
-self.addEventListener('install', function(event) {
+/*self.addEventListener('install', function(event) {
   // Perform install steps
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -30,25 +30,25 @@ self.addEventListener('install', function(event) {
       })
   );
   event.waitUntil(self.skipWaiting());
-});
+});*/
 
 
-/*self.addEventListener('install', function(event) {
+self.addEventListener('install', function(event) {
   // Perform install steps
   const cachePromise = caches.open(CACHE_NAME)
     .then(function(cache) {
-      //console.log('install: opened cache');
+      console.log('install: opened cache');
       return cache.addAll(urlsToCache);
     })
     .then(() => {
-      //console.log('install: added all urls to cache');
+      console.log('install: added all urls to cache');
     });
 
   event.waitUntil(cachePromise);
   event.waitUntil(self.skipWaiting()); // Activate worker immediately
   
-  //console.log('!!!!!!!!!installed');
-});*/
+  console.log('ServiceWorker installed.');
+});
 
 self.addEventListener('activate', async function(event) {
   
