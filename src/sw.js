@@ -35,18 +35,16 @@ self.addEventListener('install', function(event) {
   console.log('ServiceWorker installed.');
 
   // Perform install steps
-  var cachePromise = caches.open(CACHE_NAME);
-  console.log(cachePromise);
-  
-  cachePromise.then(function(cache) {
-    console.log('install: opened cache');
-    return cache.addAll(urlsToCache);
-  })
-  .then(() => {
-    console.log('install: added all urls to cache');
-  });
+  /*var cachePromise = */caches.open(CACHE_NAME)
+    .then(function(cache) {
+      console.log('install: opened cache');
+      return cache.addAll(urlsToCache);
+    })
+    .then(() => {
+      console.log('install: added all urls to cache');
+    });
 
-  event.waitUntil(cachePromise);
+  //event.waitUntil(cachePromise);
   event.waitUntil(self.skipWaiting()); // Activate worker immediately
   
   
