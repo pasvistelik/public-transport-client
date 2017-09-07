@@ -136,7 +136,7 @@ class AppClient {
     // Find optimal ways between two points. The start time, reserved time, going speed and transport types are known.
     static async findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
         var findedOptimalWays = null;
-        if (AppClient.isNeedCountingOnServer) {
+        if (JSON.parse(AppClient.isNeedCountingOnServer) === true) {
             try { // Пробуем получить оптимальные пути с сервера.
                 findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
             } catch (e) { // Иначе выполняем все расчеты на клиенте.
