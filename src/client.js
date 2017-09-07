@@ -73,7 +73,7 @@ class AppClient {
 
     static get isNeedCountingOnServer(){
         var value = localStorage["isNeedCountingOnServer"];
-        return (value == null) ? (localStorage["isNeedCountingOnServer"] = true) : value;
+        return (value == null) ? JSON.parse(localStorage["isNeedCountingOnServer"] = true) : JSON.parse(value);
     }
     static set isNeedCountingOnServer(value){
         if (value === true || value === false) localStorage["totalTimePercentValue"] = value;
