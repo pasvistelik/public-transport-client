@@ -51,8 +51,6 @@ else {
 }
 
 
-//import './install-service-worker.js';
-
 if (navigator.onLine === undefined || navigator.onLine === false){
     DataProvider.loadDataAndInitialize();
 }
@@ -72,6 +70,14 @@ class AppClient {
     static isCountWayButtonClicked() {
         return AppClient.countWayButtonClicked;
     }*/
+
+    static get isNeedCountingOnServer(){
+        var value = localStorage["isNeedCountingOnServer"];
+        return (value == null) ? (localStorage["isNeedCountingOnServer"] = true) : value;
+    }
+    static set isNeedCountingOnServer(value){
+        if (value === true || value === false) localStorage["totalTimePercentValue"] = value;
+    }
 
     static startOptimalRoutePoint = null;
     static finalOptimalRoutePoint = null;
@@ -130,32 +136,43 @@ class AppClient {
     // Find optimal ways between two points. The start time, reserved time, going speed and transport types are known.
     static async findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
         var findedOptimalWays = null;
-        try { // Пробуем получить оптимальные пути с сервера.
-            findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
-        } catch (e) { // Иначе выполняем все расчеты на клиенте.
-            //console.log(e);
+        if (AppClient.isNeedCountingOnServer) {
+            try { // Пробуем получить оптимальные пути с сервера.
+                findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+            } catch (e) { // Иначе выполняем все расчеты на клиенте.
+                //console.log(e);
+                try {
+                    findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+                }
+                catch(ex){
+                    console.log(ex);
+                }
+            }
+        }
+        else {
             try {
                 findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
             }
             catch(ex){
                 console.log(ex);
             }
-        } finally{
-            if (findedOptimalWays != null && findedOptimalWays.length !== 0) {
-                AppClient.findedOptimalWays = findedOptimalWays;
-
-                AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalTimeSeconds);
-                AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalGoingTimeSeconds);
-                AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[0].totalTransportChangingCount);
-                for (let i = 1; i < AppClient.findedOptimalWays.length; i++) {
-                    if (parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) < AppClient.minimalTimeSeconds) AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds);
-                    if (parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) < AppClient.minimalGoingTimeSeconds) AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds);
-                    if (parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) < AppClient.minimalTransportChangingCount) AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount);
-                }
-                if (AppClient.minimalTransportChangingCount < 1) AppClient.minimalTransportChangingCount = 1;
-            }
-            return findedOptimalWays;
         }
+    
+        if (findedOptimalWays != null && findedOptimalWays.length !== 0) {
+            AppClient.findedOptimalWays = findedOptimalWays;
+
+            AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalTimeSeconds);
+            AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalGoingTimeSeconds);
+            AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[0].totalTransportChangingCount);
+            for (let i = 1; i < AppClient.findedOptimalWays.length; i++) {
+                if (parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) < AppClient.minimalTimeSeconds) AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds);
+                if (parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) < AppClient.minimalGoingTimeSeconds) AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds);
+                if (parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) < AppClient.minimalTransportChangingCount) AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount);
+            }
+            if (AppClient.minimalTransportChangingCount < 1) AppClient.minimalTransportChangingCount = 1;
+        }
+        return findedOptimalWays;
+    
     }
 
     // Sort the finded ways with the importance of each criterion.
