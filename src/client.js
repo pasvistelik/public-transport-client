@@ -76,7 +76,7 @@ class AppClient {
         return (value == null) ? JSON.parse(localStorage["isNeedCountingOnServer"] = true) : JSON.parse(value);
     }
     static set isNeedCountingOnServer(value){
-        if (value === true || value === false) localStorage["totalTimePercentValue"] = value;
+        if (value === JSON.stringify(true) || value === JSON.stringify(false)) localStorage["totalTimePercentValue"] = value;
     }
 
     static startOptimalRoutePoint = null;
