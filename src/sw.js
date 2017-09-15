@@ -27,12 +27,15 @@ self.addEventListener('install', function(event) {
       })
   );
   event.waitUntil(self.skipWaiting());*/
-  event.waitUntil((function(){
+  event.waitUntil((async function(){
     caches.open(CACHE_NAME)
     .then(function(cache) {
-      console.log('Opened cache');
+      console.log('install: opened cache');
       return cache.addAll(urlsToCache);
-    });
+    })
+    .then(() => {
+      console.log('install: added all urls to cache');
+    })
     self.skipWaiting();
   })());
 });
@@ -126,7 +129,7 @@ self.addEventListener('message', async function(event) {
 
 
 /////////////////////////////222222222222222222222222222222222222222222222222222222222222222222222222222//////////////////////////////////
-/*self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function(event) {
   const { url } = event.request;
   event.respondWith(
     caches.match(event.request)
@@ -141,11 +144,11 @@ self.addEventListener('message', async function(event) {
       }
     )
   );
-});*/
+});
 
 
 
-self.addEventListener('fetch', function(event) {
+/*self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
@@ -157,7 +160,7 @@ self.addEventListener('fetch', function(event) {
       });
     })
   );
-});
+});*/
 
 
 
