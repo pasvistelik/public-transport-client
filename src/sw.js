@@ -54,8 +54,8 @@ self.addEventListener('install', function(event) {
 self.addEventListener('activate', async function(event) {
   console.log('ServiceWorker activated.');
 
-  await DataProvider.loadDataAndInitialize();
-  //event.waitUntil(await DataProvider.loadDataAndInitialize());
+  //await DataProvider.loadDataAndInitialize();
+  event.waitUntil(await DataProvider.loadDataAndInitialize());
   
   event.waitUntil(self.clients.claim()); // Become available to all pages
 
