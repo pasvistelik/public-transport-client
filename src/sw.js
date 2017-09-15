@@ -1,8 +1,7 @@
 import DataProvider from './dataProvider';
 import ApiConfig from './config';
 import OptimalRoutesCollection from 'public-transport-find-optimal-ways/lib/optimalRoutesCollection';
-//import AppClient from './client';
-//let s = '123hello123';
+
 console.log('Hello from SW...');
 
 
@@ -18,7 +17,7 @@ const urlsToCache = [
   '/sw.js'
 ];
 
-/*self.addEventListener('install', function(event) {
+self.addEventListener('install', function(event) {
   // Perform install steps
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -28,16 +27,16 @@ const urlsToCache = [
       })
   );
   event.waitUntil(self.skipWaiting());
-});*/
+});
 
 
-self.addEventListener('install', function(event) {
+/*self.addEventListener('install', function(event) {
   console.log('ServiceWorker installed.');
 
   var cachePromise = caches.open(CACHE_NAME).then(function(cache) {
     return cache.addAll(urlsToCache);
   })
-
+*/
   /*// Perform install steps
   var cachePromise = caches.open(CACHE_NAME)
     .then(function(cache) {
@@ -48,16 +47,15 @@ self.addEventListener('install', function(event) {
       console.log('install: added all urls to cache');
     });*/
 
-  event.waitUntil(cachePromise);
-  event.waitUntil(self.skipWaiting()); // Activate worker immediately
-  
-  
-});
+  //event.waitUntil(cachePromise);
+  //event.waitUntil(self.skipWaiting()); // Activate worker immediately
+//});
 
 self.addEventListener('activate', async function(event) {
   console.log('ServiceWorker activated.');
 
-  event.waitUntil(await DataProvider.loadDataAndInitialize());
+  await DataProvider.loadDataAndInitialize();
+  //event.waitUntil(await DataProvider.loadDataAndInitialize());
   
   event.waitUntil(self.clients.claim()); // Become available to all pages
 
