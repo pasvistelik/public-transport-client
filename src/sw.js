@@ -14,7 +14,7 @@ const urlsToCache = [
   '/asset-manifest.json',
   '/static/js/bundle.js',
   '/static/css/style.css',
-  '/sw.js'
+  //'/sw.js'
 ];
 
 self.addEventListener('install', function(event) {
@@ -69,6 +69,7 @@ self.addEventListener('activate', async function(event) {
   event.waitUntil((async function(){
     await DataProvider.loadDataAndInitialize();
     self.clients.claim();
+    self.skipWaiting();
   })());
 
 });
@@ -144,7 +145,7 @@ self.addEventListener('message', async function(event) {
 
 
 
-/*self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
@@ -156,14 +157,14 @@ self.addEventListener('message', async function(event) {
       });
     })
   );
-});*/
+});
 
 
 
-self.addEventListener('fetch', function(event) {
+/*self.addEventListener('fetch', function(event) {
   event.respondWith(
     fetch(event.request).catch(function() {
       return caches.match(event.request);
     })
   );
-});
+});*/
