@@ -129,7 +129,7 @@ self.addEventListener('message', async function(event) {
 
 
 /////////////////////////////222222222222222222222222222222222222222222222222222222222222222222222222222//////////////////////////////////
-self.addEventListener('fetch', function(event) {
+/*self.addEventListener('fetch', function(event) {
   const { url } = event.request;
   event.respondWith(
     caches.match(event.request)
@@ -144,23 +144,23 @@ self.addEventListener('fetch', function(event) {
       }
     )
   );
-});
+});*/
 
 
 
-/*self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request.clone()).then(function(response) {
-          console.dir(response);
+          //console.dir(response);
           cache.put(event.request.clone(), response.clone());
           return response;
         });
       });
     })
   );
-});*/
+});
 
 
 
