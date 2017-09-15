@@ -19,14 +19,22 @@ const urlsToCache = [
 
 self.addEventListener('install', function(event) {
   // Perform install steps
-  event.waitUntil(
+  /*event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
   );
-  event.waitUntil(self.skipWaiting());
+  event.waitUntil(self.skipWaiting());*/
+  event.waitUntil((function(){
+    caches.open(CACHE_NAME)
+    .then(function(cache) {
+      console.log('Opened cache');
+      return cache.addAll(urlsToCache);
+    });
+    self.skipWaiting();
+  })());
 });
 
 
@@ -60,7 +68,7 @@ self.addEventListener('activate', async function(event) {
   
   event.waitUntil((async function(){
     await DataProvider.loadDataAndInitialize();
-    self.clients.claim()
+    self.clients.claim();
   })());
 
 });
