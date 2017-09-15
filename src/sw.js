@@ -68,8 +68,8 @@ self.addEventListener('activate', async function(event) {
   
   event.waitUntil((async function(){
     await DataProvider.loadDataAndInitialize();
-    self.clients.claim();
     self.skipWaiting();
+    self.clients.claim();
   })());
 
 });
