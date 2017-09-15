@@ -55,9 +55,10 @@ self.addEventListener('activate', async function(event) {
   console.log('ServiceWorker activated.');
 
   //await DataProvider.loadDataAndInitialize();
-  event.waitUntil(await DataProvider.loadDataAndInitialize());
   
   event.waitUntil(self.clients.claim()); // Become available to all pages
+  
+  event.waitUntil(await DataProvider.loadDataAndInitialize());
 
 });
 
