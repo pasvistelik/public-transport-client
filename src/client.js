@@ -34,7 +34,7 @@ if ('serviceWorker' in navigator) {
         }, ApiConfig.clientVsSwNoKillingMessageInterval);
         navigator.serviceWorker.addEventListener('message', function(event) {
             if(event.data === 'no-kill-sw-accepted') {
-                //console.log('Client: SW call no-kill-sw-accepted.')
+                console.log('Client: SW call no-kill-sw-accepted.')
             }
             else if(event.data.requestType === 'optimalWayResult'){
                 handleOptimalWayResult(event.data);
@@ -364,7 +364,7 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
         dopTimeMinutes: parseFloat(my_dopTimeMinutes)
     };
     try {
-        if(AppClient.canUseSW !== true) throw new Error();
+        if(AppClient.canUseSW !== true || navigator.serviceWorker ==null || navigator.serviceWorker.controller==null) throw new Error();
         console.log('Start counting in SW.');
         AppClient.findedOptimalWays = await getOptimalRoutesCollectionFromSw(params);
         if(AppClient.findedOptimalWays == null) throw new Error();

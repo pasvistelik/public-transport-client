@@ -35,14 +35,22 @@ self.addEventListener('install', function(event) {
     self.skipWaiting();
   })());*/
 
-  event.waitUntil((async function(){
+  /*event.waitUntil((async function(){
     caches.open(CACHE_NAME)
     .then(function(cache) {
       console.log('Opened cache');
       return cache.addAll(urlsToCache);
     });
     self.skipWaiting();
-  })());
+  })());*/
+
+  event.waitUntil(self.skipWaiting().then(function(){
+    caches.open(CACHE_NAME)
+    .then(function(cache) {
+      console.log('Opened cache');
+      return cache.addAll(urlsToCache);
+    });
+  }))
 });
 
 
@@ -72,12 +80,12 @@ self.addEventListener('activate', async function(event) {
 
   //await DataProvider.loadDataAndInitialize();
   
-  event.waitUntil(self.clients.claim()); // Become available to all pages
+  //event.waitUntil(self.clients.claim()); // Become available to all pages
   
-  /*event.waitUntil(self.clients.claim().then(async function(){
+  event.waitUntil(self.clients.claim().then(async function(){
+    self.skipWaiting();
     await DataProvider.loadDataAndInitialize();
-    
-  }));*///1111111111111111111111111111111111111111111111111111111111111111!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  }));
 
 });
 
@@ -87,7 +95,7 @@ self.addEventListener('message', async function(event) {
   var sender = event.source;
   //console.log(event.data);
   if(event.data === 'no-kill-sw') {
-    //console.log('SW: client call no-kill-sw.')
+    console.log('SW: client call no-kill-sw.')
     if(clients.includes(sender.id)){
       return;
     }
@@ -157,7 +165,7 @@ self.addEventListener('fetch', function(event) {
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request.clone()).then(function(response) {
-          console.log(event.request);////
+          //console.log(event.request);////
           cache.put(event.request.clone(), response.clone());
           return response;
         });
@@ -174,4 +182,5 @@ self.addEventListener('fetch', function(event) {
       return caches.match(event.request);
     })
   );
-});*/
+});
+*/
