@@ -35,14 +35,14 @@ self.addEventListener('install', function(event) {
     self.skipWaiting();
   })());*/
 
-  event.waitUntil(self.skipWaiting().then(async function(){
+  event.waitUntil((async function(){
     caches.open(CACHE_NAME)
     .then(function(cache) {
       console.log('Opened cache');
       return cache.addAll(urlsToCache);
     });
-    
-  }));
+    self.skipWaiting();
+  })());
 });
 
 
