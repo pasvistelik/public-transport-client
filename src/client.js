@@ -21,8 +21,8 @@ if ('serviceWorker' in navigator) {
     //console.log(navigator.serviceWorker);
 
     await (async function(){
-        navigator.serviceWorker.getRegistration();
-        navigator.serviceWorker.ready;
+        await navigator.serviceWorker.getRegistration();
+        await navigator.serviceWorker.ready;
     })();
 
     var controller = await navigator.serviceWorker.controller;
@@ -366,7 +366,7 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
         dopTimeMinutes: parseFloat(my_dopTimeMinutes)
     };
     try {
-        if(AppClient.canUseSW === false) throw new Error();
+        if(AppClient.canUseSW !== true) throw new Error();
         AppClient.findedOptimalWays = await getOptimalRoutesCollectionFromSw(params);
         if(AppClient.findedOptimalWays == null) throw new Error();
     } catch (e){
