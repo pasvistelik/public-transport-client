@@ -18,6 +18,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', function(event) {
+  console.log('ServiceWorker installed.');
   // Perform install steps
   /*event.waitUntil(
     caches.open(CACHE_NAME)
@@ -43,14 +44,18 @@ self.addEventListener('install', function(event) {
     });
     self.skipWaiting();
   })());*/
+  event.waitUntil(self.skipWaiting());
 
-  event.waitUntil(self.skipWaiting().then(function(){
+
+
+  /*event.waitUntil(self.skipWaiting().then(function(){
     caches.open(CACHE_NAME)
     .then(function(cache) {
       console.log('Opened cache');
       return cache.addAll(urlsToCache);
     });
-  }))
+  }))*/
+
 });
 
 
@@ -80,12 +85,12 @@ self.addEventListener('activate', async function(event) {
 
   //await DataProvider.loadDataAndInitialize();
   
-  //event.waitUntil(self.clients.claim()); // Become available to all pages
+  event.waitUntil(self.clients.claim()); // Become available to all pages
   
-  event.waitUntil(self.clients.claim().then(async function(){
+  /*event.waitUntil(self.clients.claim().then(async function(){
     self.skipWaiting();
     await DataProvider.loadDataAndInitialize();
-  }));
+  }));*/
 
 });
 
