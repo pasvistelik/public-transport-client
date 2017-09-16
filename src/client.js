@@ -14,17 +14,22 @@ if ('serviceWorker' in navigator) {
   console.log('ServiceWorker was finded in navigator.');
   const registration = runtime.register();
   
-  registration.then(async function() {
+  registration.then(async function(obj) {
+    console.log(obj);
     console.log('ServiceWorker registered.');
     //console.log(registration);
     //console.log(navigator.serviceWorker);
 
-    await navigator.serviceWorker.getRegistration();
-    await navigator.serviceWorker.ready;
+    await (async function(){
+        navigator.serviceWorker.getRegistration();
+        navigator.serviceWorker.ready;
+    })();
 
-    var controller = navigator.serviceWorker.controller;
+    var controller = await navigator.serviceWorker.controller;
     
     if (controller != null) {
+        AppClient.canUseSW = true;
+
         controller.postMessage("no-kill-sw");
         setInterval(function(){
             controller.postMessage("no-kill-sw");
@@ -77,6 +82,9 @@ class AppClient {
     static isCountWayButtonClicked() {
         return AppClient.countWayButtonClicked;
     }*/
+
+    static canUseSW = false;
+
 
     static get isNeedCountingOnServer(){
         var value = localStorage["isNeedCountingOnServer"];
@@ -358,6 +366,7 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
         dopTimeMinutes: parseFloat(my_dopTimeMinutes)
     };
     try {
+        if(AppClient.canUseSW === false) throw new Error();
         AppClient.findedOptimalWays = await getOptimalRoutesCollectionFromSw(params);
         if(AppClient.findedOptimalWays == null) throw new Error();
     } catch (e){
