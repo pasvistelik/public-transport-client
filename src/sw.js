@@ -28,6 +28,7 @@ self.addEventListener('install', function(event) {
   );
   event.waitUntil(self.skipWaiting());*/
   event.waitUntil((async function(){
+    self.skipWaiting();
     caches.open(CACHE_NAME)
     .then(function(cache) {
       console.log('install: opened cache');
@@ -35,8 +36,7 @@ self.addEventListener('install', function(event) {
     })
     .then(() => {
       console.log('install: added all urls to cache');
-    })
-    self.skipWaiting();
+    });
   })());
 });
 
@@ -70,7 +70,7 @@ self.addEventListener('activate', async function(event) {
   //event.waitUntil(self.clients.claim()); // Become available to all pages
   
   event.waitUntil((async function(){
-    self.skipWaiting();
+    //self.skipWaiting();
     self.clients.claim();
     await DataProvider.loadDataAndInitialize();
   })());
