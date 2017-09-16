@@ -365,6 +365,7 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
     };
     try {
         if(AppClient.canUseSW !== true) throw new Error();
+        console.log('Start counting in SW.');
         AppClient.findedOptimalWays = await getOptimalRoutesCollectionFromSw(params);
         if(AppClient.findedOptimalWays == null) throw new Error();
     } catch (e){

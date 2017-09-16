@@ -72,12 +72,12 @@ self.addEventListener('activate', async function(event) {
 
   //await DataProvider.loadDataAndInitialize();
   
-  //event.waitUntil(self.clients.claim()); // Become available to all pages
+  event.waitUntil(self.clients.claim()); // Become available to all pages
   
-  event.waitUntil(self.clients.claim().then(async function(){
+  /*event.waitUntil(self.clients.claim().then(async function(){
     await DataProvider.loadDataAndInitialize();
     
-  }));
+  }));*///1111111111111111111111111111111111111111111111111111111111111111!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 });
 
