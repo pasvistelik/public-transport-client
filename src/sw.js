@@ -27,13 +27,22 @@ self.addEventListener('install', function(event) {
       })
   );
   event.waitUntil(self.skipWaiting());*/
-  event.waitUntil((async function(){
+  /*event.waitUntil((async function(){
     let cache = await caches.open(CACHE_NAME);
     console.log('install: opened cache');
     await cache.addAll(urlsToCache);
     console.log('install: added all urls to cache');
     self.skipWaiting();
-  })());
+  })());*/
+
+  event.waitUntil(self.skipWaiting().then(async function(){
+    caches.open(CACHE_NAME)
+    .then(function(cache) {
+      console.log('Opened cache');
+      return cache.addAll(urlsToCache);
+    });
+    
+  }));
 });
 
 
@@ -148,7 +157,7 @@ self.addEventListener('fetch', function(event) {
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request.clone()).then(function(response) {
-          //console.dir(response);
+          console.log(event.request);////
           cache.put(event.request.clone(), response.clone());
           return response;
         });
