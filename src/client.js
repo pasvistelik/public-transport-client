@@ -15,15 +15,13 @@ if ('serviceWorker' in navigator) {
   const registration = runtime.register();
   
   registration.then(async function(obj) {
-    console.log(obj);
+    //console.log(obj);
     console.log('ServiceWorker registered.');
     //console.log(registration);
     //console.log(navigator.serviceWorker);
 
-    await (async function(){
-        await navigator.serviceWorker.getRegistration();
-        await navigator.serviceWorker.ready;
-    })();
+    await navigator.serviceWorker.getRegistration();
+    await navigator.serviceWorker.ready;
 
     var controller = await navigator.serviceWorker.controller;
     
