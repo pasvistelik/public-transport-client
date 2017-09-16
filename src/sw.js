@@ -28,15 +28,11 @@ self.addEventListener('install', function(event) {
   );
   event.waitUntil(self.skipWaiting());*/
   event.waitUntil((async function(){
+    let cache = await caches.open(CACHE_NAME);
+    console.log('install: opened cache');
+    await cache.addAll(urlsToCache);
+    console.log('install: added all urls to cache');
     self.skipWaiting();
-    caches.open(CACHE_NAME)
-    .then(function(cache) {
-      console.log('install: opened cache');
-      return cache.addAll(urlsToCache);
-    })
-    .then(() => {
-      console.log('install: added all urls to cache');
-    });
   })());
 });
 
@@ -69,11 +65,10 @@ self.addEventListener('activate', async function(event) {
   
   //event.waitUntil(self.clients.claim()); // Become available to all pages
   
-  event.waitUntil((async function(){
-    //self.skipWaiting();
-    self.clients.claim();
+  event.waitUntil(self.clients.claim().then(async function(){
     await DataProvider.loadDataAndInitialize();
-  })());
+    
+  }));
 
 });
 
@@ -96,7 +91,7 @@ self.addEventListener('message', async function(event) {
     }
   }
   else if(event.data.requestType === 'optimalWay'){
-    //console.log('SW: request for optimalWay.');
+    console.log('SW: request for optimalWay.');
 
     await DataProvider.loadDataAndInitialize();
 

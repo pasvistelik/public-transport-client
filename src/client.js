@@ -43,20 +43,27 @@ if ('serviceWorker' in navigator) {
     }
     else {
         console.log("navigator.serviceWorker.controller is null.")
+        if (navigator.onLine === undefined || navigator.onLine === false){
+            DataProvider.loadDataAndInitialize();
+        }
+        else {
+            DataProvider.loadDataOnly();
+        }
     }
   })
 }
 else {
     console.log('ServiceWorker not finded in navigator.');
+    if (navigator.onLine === undefined || navigator.onLine === false){
+        DataProvider.loadDataAndInitialize();
+    }
+    else {
+        DataProvider.loadDataOnly();
+    }
 }
 
 
-if (navigator.onLine === undefined || navigator.onLine === false){
-    DataProvider.loadDataAndInitialize();
-}
-else {
-    DataProvider.loadDataOnly();
-}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Client.
