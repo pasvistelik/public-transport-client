@@ -36,15 +36,15 @@ self.addEventListener('install', function(event) {
     self.skipWaiting();
   })());*/
 
-  /*event.waitUntil((async function(){
+  event.waitUntil(
     caches.open(CACHE_NAME)
     .then(function(cache) {
       console.log('Opened cache');
+      self.skipWaiting();
       return cache.addAll(urlsToCache);
-    });
-    self.skipWaiting();
-  })());*/
-  event.waitUntil(self.skipWaiting());
+    })
+  );
+  //event.waitUntil(self.skipWaiting());
 
 
 
@@ -80,17 +80,16 @@ self.addEventListener('install', function(event) {
   //event.waitUntil(self.skipWaiting()); // Activate worker immediately
 //});
 
-self.addEventListener('activate', async function(event) {
+self.addEventListener('activate', function(event) {
   console.log('ServiceWorker activated.');
 
   //await DataProvider.loadDataAndInitialize();
   
-  event.waitUntil(self.clients.claim()); // Become available to all pages
+  //event.waitUntil(self.clients.claim()); // Become available to all pages
   
-  /*event.waitUntil(self.clients.claim().then(async function(){
-    self.skipWaiting();
+  event.waitUntil(self.clients.claim().then(async function(){
     await DataProvider.loadDataAndInitialize();
-  }));*/
+  }));
 
 });
 

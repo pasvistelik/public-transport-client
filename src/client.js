@@ -12,7 +12,7 @@ import PointsHistoryStorage from './pointsHistoryStorage';
 //console.log(navigator);
 if ('serviceWorker' in navigator) {
   console.log('ServiceWorker was finded in navigator.');
-  const registration = runtime.register();
+  var registration = runtime.register();
   
   registration.then(async function(obj) {
     //console.log(obj);
@@ -23,7 +23,7 @@ if ('serviceWorker' in navigator) {
     await navigator.serviceWorker.getRegistration();
     await navigator.serviceWorker.ready;
 
-    var controller = await navigator.serviceWorker.controller;
+    var controller = navigator.serviceWorker.controller;
     
     if (controller != null) {
         AppClient.canUseSW = true;
