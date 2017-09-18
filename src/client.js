@@ -26,6 +26,9 @@ if ('serviceWorker' in navigator) {
         await navigator.serviceWorker.ready.then(function(obj){
             console.log(obj.active.state);
             console.log(navigator.serviceWorker.controller);
+        }).then(function(obj){
+            console.log(obj.active.state);
+            console.log(navigator.serviceWorker.controller);
         });
     })();
 
