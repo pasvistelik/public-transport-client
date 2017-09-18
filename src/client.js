@@ -24,7 +24,7 @@ if ('serviceWorker' in navigator) {
         await navigator.serviceWorker.getRegistration();
         await navigator.serviceWorker.getRegistrations();
         await navigator.serviceWorker.ready.then(function(obj){
-            conlole.log(obj);
+            console.log(obj);
         });
     })();
 
