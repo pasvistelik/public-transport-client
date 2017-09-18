@@ -22,11 +22,15 @@ if ('serviceWorker' in navigator) {
 
     await (async function(){
         await navigator.serviceWorker.getRegistration();
-        await navigator.serviceWorker.ready;
+        await navigator.serviceWorker.getRegistrations();
+        await navigator.serviceWorker.ready.then(function(obj){
+            conlole.log(obj);
+        });
     })();
 
     var controller = navigator.serviceWorker.controller;
     
+    console.log('Try find navigator.serviceWorker.controller...');
     if (controller != null) {
         AppClient.canUseSW = true;
 
