@@ -20,8 +20,10 @@ if ('serviceWorker' in navigator) {
     //console.log(registration);
     //console.log(navigator.serviceWorker);
 
-    await navigator.serviceWorker.getRegistration();
-    await navigator.serviceWorker.ready;
+    await (async function(){
+        await navigator.serviceWorker.getRegistration();
+        await navigator.serviceWorker.ready;
+    })();
 
     var controller = navigator.serviceWorker.controller;
     

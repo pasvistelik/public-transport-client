@@ -38,11 +38,12 @@ self.addEventListener('install', function(event) {
 
 // Activate event
 // Be sure to call self.clients.claim()
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', async function(event) {
   console.log('ServiceWorker activated.');
 	// `claim()` sets this worker as the active worker for all clients that
 	// match the workers scope and triggers an `oncontrollerchange` event for
-	// the clients.
+  // the clients.
+  await DataProvider.loadDataAndInitialize();
 	return self.clients.claim();
 });
 
