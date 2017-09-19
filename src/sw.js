@@ -217,7 +217,9 @@ self.addEventListener('fetch', function(event) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request.clone()).then(function(response) {
           //console.log(event.request);////
-          cache.put(event.request.clone(), response.clone());
+          if(event.request.url != ApiConfig.apiGetRoutesUrl && event.request.url != ApiConfig.apiGetStationsUrl && event.request.url != ApiConfig.apiGetTimetablesUrl){
+            cache.put(event.request.clone(), response.clone());
+          }
           return response;
         });
       });
