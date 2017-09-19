@@ -19,9 +19,21 @@ const urlsToCache = [
 
 // Install event - cache files (...or not)
 // Be sure to call skipWaiting()!
-self.addEventListener('install', function(event) {
+self.addEventListener('install', async function(event) {
   console.log('ServiceWorker installed.');
-  event.waitUntil(
+
+  await caches.open(CACHE_NAME).then(function(cache) {
+    // Important to `return` the promise here to have `skipWaiting()`
+    // fire after the cache has been updated.
+    return cache.addAll(urlsToCache);
+  }).then(function() {
+    // `skipWaiting()` forces the waiting ServiceWorker to become the
+    // active ServiceWorker, triggering the `onactivate` event.
+    // Together with `Clients.claim()` this allows a worker to take effect
+    // immediately in the client(s).
+    return self.skipWaiting();
+  });
+  /*event.waitUntil(
 	caches.open(CACHE_NAME).then(function(cache) {
         // Important to `return` the promise here to have `skipWaiting()`
         // fire after the cache has been updated.
@@ -33,7 +45,7 @@ self.addEventListener('install', function(event) {
       // immediately in the client(s).
       return self.skipWaiting();
     })
-  );
+  );*/
 });
 
 // Activate event
