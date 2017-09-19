@@ -22,9 +22,9 @@ if ('serviceWorker' in navigator) {
 
     await (async function(){
         await navigator.serviceWorker.getRegistration();
-        await navigator.serviceWorker.getRegistrations();
+        //await navigator.serviceWorker.getRegistrations();
         await navigator.serviceWorker.ready.then(function(obj){
-            console.log(obj.active.state);
+            console.log(obj);
             console.log(navigator.serviceWorker.controller);
         }).then(function(obj){
             console.log(obj);
