@@ -144,6 +144,10 @@ var clients = [];
 
 self.addEventListener('message', async function(event) {
   var sender = event.source;
+  if (sender == null){
+    console.log("sender is null!");
+    return;
+  }
   console.log("SW: input message event:");
   console.log(event);
   if(event.data === 'no-kill-sw') {
