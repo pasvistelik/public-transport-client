@@ -144,7 +144,8 @@ var clients = [];
 
 self.addEventListener('message', async function(event) {
   var sender = event.source;
-  //console.log(event.data);
+  console.log("SW: input message event:");
+  console.log(event);
   if(event.data === 'no-kill-sw') {
     console.log('SW: client call no-kill-sw.')
     if(clients.includes(sender.id)){
