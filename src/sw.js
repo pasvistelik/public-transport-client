@@ -148,11 +148,11 @@ self.addEventListener('message', async function(event) {
   console.log(event);
   if(event.data === 'no-kill-sw') {
     console.log('SW: client call no-kill-sw.')
-    if(clients.includes(sender.id)){
+    if(clients.includes(sender/*.id*/)){
       return;
     }
     else {
-      clients.push(sender.id);
+      clients.push(sender/*.id*/);
       sender.postMessage('no-kill-sw-accepted');
       setInterval(function(){
         sender.postMessage("no-kill-sw-accepted");
