@@ -57,7 +57,7 @@ if ('serviceWorker' in navigator) {
                         controller.postMessage("sw-not-answered");
                         console.log('Client: SW not answered.');
                         console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
-                        if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
+                        if (navigator.onLine === undefined || navigator.onLine === false || !JSON.parse(AppClient.isNeedCountingOnServer)){
                             DataProvider.loadDataAndInitialize();
                         }
                         else {
@@ -72,7 +72,7 @@ if ('serviceWorker' in navigator) {
             else {
                 console.log("navigator.serviceWorker.controller is null.")
                 console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
-                if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
+                if (navigator.onLine === undefined || navigator.onLine === false || !JSON.parse(AppClient.isNeedCountingOnServer)){
                     DataProvider.loadDataAndInitialize();
                 }
                 else {
@@ -89,7 +89,7 @@ if ('serviceWorker' in navigator) {
 else {
     console.log('ServiceWorker not finded in navigator.');
     console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
-    if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
+    if (navigator.onLine === undefined || navigator.onLine === false || !JSON.parse(AppClient.isNeedCountingOnServer)){
         DataProvider.loadDataAndInitialize();
     }
     else {
@@ -181,7 +181,7 @@ class AppClient {
     // Find optimal ways between two points. The start time, reserved time, going speed and transport types are known.
     static async findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
         var findedOptimalWays = null;
-        if (AppClient.isNeedCountingOnServer) {
+        if (JSON.parse(AppClient.isNeedCountingOnServer)) {
             try { // Пробуем получить оптимальные пути с сервера.
                 findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
             } catch (e) { // Иначе выполняем все расчеты на клиенте.
