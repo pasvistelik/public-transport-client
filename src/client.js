@@ -25,11 +25,10 @@ if ('serviceWorker' in navigator) {
         //await navigator.serviceWorker.getRegistrations();
         await navigator.serviceWorker.ready.then(function(obj){
             console.log(obj);
-            console.log("Checking serviceWorker.controller result: " + (navigator.serviceWorker.controller == null));
             console.log(navigator.serviceWorker.controller);
         }).then(function(obj){
             console.log(obj);
-            console.log("Checking serviceWorker.controller result: " + (navigator.serviceWorker.controller == null));
+            console.log("Checking serviceWorker.controller result: " + (navigator.serviceWorker.controller != null));
 
             var controller = navigator.serviceWorker.controller;
             
