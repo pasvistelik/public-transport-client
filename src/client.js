@@ -9,7 +9,6 @@ var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 import PointsHistoryStorage from './pointsHistoryStorage';
 
 //console.log('test123');
-console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
 //console.log(navigator);
 if ('serviceWorker' in navigator) {
   console.log('ServiceWorker was finded in navigator.');
@@ -56,6 +55,7 @@ if ('serviceWorker' in navigator) {
                 setTimeout(async function(){
                     if(!AppClient.canUseSW){
                         console.log('Client: SW not answered.');
+                        console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
                         if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
                             DataProvider.loadDataAndInitialize();
                         }
@@ -67,6 +67,7 @@ if ('serviceWorker' in navigator) {
             }
             else {
                 console.log("navigator.serviceWorker.controller is null.")
+                console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
                 if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
                     DataProvider.loadDataAndInitialize();
                 }
@@ -83,6 +84,7 @@ if ('serviceWorker' in navigator) {
 }
 else {
     console.log('ServiceWorker not finded in navigator.');
+    console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
     if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
         DataProvider.loadDataAndInitialize();
     }
