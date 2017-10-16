@@ -52,7 +52,8 @@ if ('serviceWorker' in navigator) {
                     //console.log(event.data.message);
                     //console.log(event.data);
                 });
-                setTimeout(function(){
+                setTimeout(async function(){
+                    console.log('Client: SW not answered.')
                     if(!AppClient.canUseSW){
                         if (navigator.onLine === undefined || navigator.onLine === false){
                             DataProvider.loadDataAndInitialize();
