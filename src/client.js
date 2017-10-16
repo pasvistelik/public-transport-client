@@ -9,6 +9,7 @@ var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 import PointsHistoryStorage from './pointsHistoryStorage';
 
 //console.log('test123');
+console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
 //console.log(navigator);
 if ('serviceWorker' in navigator) {
   console.log('ServiceWorker was finded in navigator.');
@@ -53,8 +54,8 @@ if ('serviceWorker' in navigator) {
                     //console.log(event.data);
                 });
                 setTimeout(async function(){
-                    console.log('Client: SW not answered.')
                     if(!AppClient.canUseSW){
+                        console.log('Client: SW not answered.');
                         if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
                             DataProvider.loadDataAndInitialize();
                         }
@@ -174,7 +175,7 @@ class AppClient {
     // Find optimal ways between two points. The start time, reserved time, going speed and transport types are known.
     static async findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
         var findedOptimalWays = null;
-        if (JSON.parse(AppClient.isNeedCountingOnServer) === true) {
+        if (AppClient.isNeedCountingOnServer) {
             try { // Пробуем получить оптимальные пути с сервера.
                 findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
             } catch (e) { // Иначе выполняем все расчеты на клиенте.
