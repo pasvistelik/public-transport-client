@@ -54,6 +54,7 @@ if ('serviceWorker' in navigator) {
                 });
                 setTimeout(async function(){
                     if(!AppClient.canUseSW){
+                        controller.postMessage("sw-not-answered");
                         console.log('Client: SW not answered.');
                         console.log("AppClient.isNeedCountingOnServer = " + AppClient.isNeedCountingOnServer);
                         if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
@@ -62,6 +63,9 @@ if ('serviceWorker' in navigator) {
                         else {
                             DataProvider.loadDataOnly();
                         }
+                    }
+                    else {
+                        controller.postMessage("can-use-sw-accepted");
                     }
                 }, 100);
             }

@@ -55,7 +55,7 @@ self.addEventListener('activate', async function(event) {
 	// `claim()` sets this worker as the active worker for all clients that
 	// match the workers scope and triggers an `oncontrollerchange` event for
   // the clients.
-  await DataProvider.loadDataAndInitialize();
+  //await DataProvider.loadDataAndInitialize();
 	return self.clients.claim();
 });
 
@@ -146,7 +146,7 @@ self.addEventListener('message', async function(event) {
   var sender = event.source;
   if (sender == null){
     console.log("sender is null!");
-    return;
+    //return;
   }
   console.log("SW: input message event:");
   console.log(event);
@@ -162,6 +162,9 @@ self.addEventListener('message', async function(event) {
         sender.postMessage("no-kill-sw-accepted");
       }, ApiConfig.clientVsSwNoKillingMessageInterval);
     }
+  }
+  else if(event.data === 'can-use-sw-accepted'){
+    await DataProvider.loadDataAndInitialize();
   }
   else if(event.data.requestType === 'optimalWay'){
     console.log('SW: request for optimalWay.');
