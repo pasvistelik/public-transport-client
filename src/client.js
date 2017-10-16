@@ -34,7 +34,7 @@ if ('serviceWorker' in navigator) {
             
             console.log('Try find navigator.serviceWorker.controller...');
             if (controller != null) {
-                
+                console.log("navigator.serviceWorker.controller was finded.")
         
                 controller.postMessage("no-kill-sw");
                 setInterval(function(){
@@ -52,10 +52,20 @@ if ('serviceWorker' in navigator) {
                     //console.log(event.data.message);
                     //console.log(event.data);
                 });
+                setTimeout(function(){
+                    if(!AppClient.canUseSW){
+                        if (navigator.onLine === undefined || navigator.onLine === false){
+                            DataProvider.loadDataAndInitialize();
+                        }
+                        else {
+                            DataProvider.loadDataOnly();
+                        }
+                    }
+                }, 100);
             }
             else {
                 console.log("navigator.serviceWorker.controller is null.")
-                if (navigator.onLine === undefined || navigator.onLine === false){
+                if (navigator.onLine === undefined || navigator.onLine === false || AppClient.canUseSW){
                     DataProvider.loadDataAndInitialize();
                 }
                 else {
@@ -71,7 +81,7 @@ if ('serviceWorker' in navigator) {
 }
 else {
     console.log('ServiceWorker not finded in navigator.');
-    if (navigator.onLine === undefined || navigator.onLine === false){
+    if (navigator.onLine === undefined || navigator.onLine === false || AppClient.canUseSW){
         DataProvider.loadDataAndInitialize();
     }
     else {
