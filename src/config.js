@@ -4,5 +4,5 @@ export default {
     apiGetRoutesUrl: "https://publictransportproject.000webhostapp.com/new/json/routes.json", //"routes"
     apiGetTimetablesUrl: "https://publictransportproject.000webhostapp.com/new/json/timetables.json?v=3", //"timetables"
 
-    clientVsSwNoKillingMessageInterval: 5000
+    clientVsSwNoKillingMessageInterval: 30000
 };

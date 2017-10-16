@@ -72,6 +72,7 @@ class JsonDataStorage {
             return await getItem('allStations');
         } 
         catch(e){
+            console.log(e);
             return null;
         }
     }
@@ -80,6 +81,7 @@ class JsonDataStorage {
             return await getItem('allRoutes');
         } 
         catch(e){
+            console.log(e);
             return null;
         }
     }
@@ -88,6 +90,7 @@ class JsonDataStorage {
             return await getItem('allTimetables');
         } 
         catch(e){
+            console.log(e);
             return null;
         }
     }
@@ -99,6 +102,7 @@ class JsonDataStorage {
             });
         } 
         catch(e){
+            console.log(e);
             return null;
         }
     }
@@ -110,6 +114,7 @@ class JsonDataStorage {
             });
         } 
         catch(e){
+            console.log(e);
             return null;
         }
     }
@@ -121,6 +126,7 @@ class JsonDataStorage {
             });
         } 
         catch(e){
+            console.log(e);
             return null;
         }
     }

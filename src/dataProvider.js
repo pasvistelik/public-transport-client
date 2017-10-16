@@ -53,6 +53,7 @@ export default class DataProvider {
         DataProvider.allTimetablesJSON = await JsonDataStorage.getAllTimetables();
 
         if(!DataProvider.allStationsLoaded){
+            const startLoadingStationsTime = Date.now();
             if (DataProvider.allStationsJSON == null) {
                 console.log("Downloading stations from server...");
 
@@ -60,18 +61,19 @@ export default class DataProvider {
                 DataProvider.allStationsJSON = await response.text();
                 DataProvider.allStations = JSON.parse(DataProvider.allStationsJSON);
 
-                if (DataProvider.allStations !== undefined && DataProvider.allStations != null) JsonDataStorage.pushAllStations(DataProvider.allStationsJSON);
+                if (DataProvider.allStations != null) JsonDataStorage.pushAllStations(DataProvider.allStationsJSON);
                 DataProvider.allStationsLoaded = true;
-                console.log("Stations loaded from server.");
+                console.log("Stations loaded from server. Time = "+(Date.now() - startLoadingStationsTime) + "ms.");
             }
             else {
                 DataProvider.allStations = JSON.parse(DataProvider.allStationsJSON);
                 DataProvider.allStationsLoaded = true;
-                console.log("Stations loaded from localStorage.");
+                console.log("Stations loaded from localStorage. Time = "+(Date.now() - startLoadingStationsTime) + "ms.");
             }
         }
 
         if(!DataProvider.allRoutesLoaded){
+            const startLoadingRoutesTime = Date.now();
             if (DataProvider.allRoutesJSON == null) {
                 console.log("Downloading routes from server...");
 
@@ -79,18 +81,19 @@ export default class DataProvider {
                 DataProvider.allRoutesJSON = await response.text();
                 DataProvider.allRoutes = JSON.parse(DataProvider.allRoutesJSON);
 
-                if (DataProvider.allRoutes !== undefined && DataProvider.allRoutes != null) JsonDataStorage.pushAllRoutes(DataProvider.allRoutesJSON);
+                if (DataProvider.allRoutes != null) JsonDataStorage.pushAllRoutes(DataProvider.allRoutesJSON);
                 DataProvider.allRoutesLoaded = true;
-                console.log("Routes loaded from server.");
+                console.log("Routes loaded from server. Time = " + (Date.now() - startLoadingRoutesTime) + "ms.");
             }
             else {
                 DataProvider.allRoutes = JSON.parse(DataProvider.allRoutesJSON);
                 DataProvider.allRoutesLoaded = true;
-                console.log("Routes loaded from localStorage.");
+                console.log("Routes loaded from localStorage. Time = " + (Date.now() - startLoadingRoutesTime) + "ms.");
             }
         }
 
         if(!DataProvider.allTimetablesLoaded){
+            const startLoadingTimetablesTime = Date.now();
             if (DataProvider.allTimetablesJSON == null) {
                 console.log("Downloading timetables from server...");
 
@@ -98,14 +101,14 @@ export default class DataProvider {
                 DataProvider.allTimetablesJSON = await response.text();
                 DataProvider.allTimetables = JSON.parse(DataProvider.allTimetablesJSON);
 
-                if (DataProvider.allTimetables !== undefined && DataProvider.allTimetables != null) JsonDataStorage.pushAllTimetables(DataProvider.allTimetablesJSON);
+                if (DataProvider.allTimetables != null) JsonDataStorage.pushAllTimetables(DataProvider.allTimetablesJSON);
                 DataProvider.allTimetablesLoaded = true;
-                console.log("Timetables loaded from server.");
+                console.log("Timetables loaded from server. Time = " + (Date.now() - startLoadingTimetablesTime) + "ms.");
             }
             else {
                 DataProvider.allTimetables = JSON.parse(DataProvider.allTimetablesJSON);
                 DataProvider.allTimetablesLoaded = true;
-                console.log("Timetables loaded from localStorage.");
+                console.log("Timetables loaded from localStorage. Time = " + (Date.now() - startLoadingTimetablesTime) + "ms.");
             }
         }
     }

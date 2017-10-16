@@ -28,7 +28,7 @@ if ('serviceWorker' in navigator) {
             console.log(navigator.serviceWorker.controller);
         }).then(function(obj){
             console.log(obj);
-            console.log(navigator.serviceWorker.controller);
+            console.log("Checking serviceWorker.controller result: " + (navigator.serviceWorker.controller == null));
         });
     })();
 
