@@ -52,7 +52,7 @@ if ('serviceWorker' in navigator) {
                     //console.log(event.data.message);
                     //console.log(event.data);
                 });
-                setTimeout(async function(){
+                /*setTimeout(async function(){
                     console.log('Client: SW not answered.')
                     if(!AppClient.canUseSW){
                         if (navigator.onLine === undefined || navigator.onLine === false){
@@ -62,11 +62,11 @@ if ('serviceWorker' in navigator) {
                             DataProvider.loadDataOnly();
                         }
                     }
-                }, 100);
+                }, 100);*/
             }
             else {
                 console.log("navigator.serviceWorker.controller is null.")
-                if (navigator.onLine === undefined || navigator.onLine === false || AppClient.canUseSW){
+                if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
                     DataProvider.loadDataAndInitialize();
                 }
                 else {
@@ -82,7 +82,7 @@ if ('serviceWorker' in navigator) {
 }
 else {
     console.log('ServiceWorker not finded in navigator.');
-    if (navigator.onLine === undefined || navigator.onLine === false || AppClient.canUseSW){
+    if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
         DataProvider.loadDataAndInitialize();
     }
     else {
