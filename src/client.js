@@ -52,17 +52,17 @@ if ('serviceWorker' in navigator) {
                     //console.log(event.data.message);
                     //console.log(event.data);
                 });
-                /*setTimeout(async function(){
+                setTimeout(async function(){
                     console.log('Client: SW not answered.')
                     if(!AppClient.canUseSW){
-                        if (navigator.onLine === undefined || navigator.onLine === false){
+                        if (navigator.onLine === undefined || navigator.onLine === false || !AppClient.isNeedCountingOnServer){
                             DataProvider.loadDataAndInitialize();
                         }
                         else {
                             DataProvider.loadDataOnly();
                         }
                     }
-                }, 100);*/
+                }, 100);
             }
             else {
                 console.log("navigator.serviceWorker.controller is null.")

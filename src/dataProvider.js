@@ -48,9 +48,9 @@ export default class DataProvider {
         }
     }
     static async loadDataOnly() {
-        DataProvider.allStationsJSON = JsonDataStorage.getAllStations();
-        DataProvider.allRoutesJSON = JsonDataStorage.getAllRoutes();
-        DataProvider.allTimetablesJSON = JsonDataStorage.getAllTimetables();
+        DataProvider.allStationsJSON = await JsonDataStorage.getAllStations();
+        DataProvider.allRoutesJSON = await JsonDataStorage.getAllRoutes();
+        DataProvider.allTimetablesJSON = await JsonDataStorage.getAllTimetables();
 
         (async function() {    
             if(!DataProvider.allStationsLoaded){
