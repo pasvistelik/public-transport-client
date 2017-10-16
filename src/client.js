@@ -25,45 +25,49 @@ if ('serviceWorker' in navigator) {
         //await navigator.serviceWorker.getRegistrations();
         await navigator.serviceWorker.ready.then(function(obj){
             console.log(obj);
+            console.log("Checking serviceWorker.controller result: " + (navigator.serviceWorker.controller == null));
             console.log(navigator.serviceWorker.controller);
         }).then(function(obj){
             console.log(obj);
             console.log("Checking serviceWorker.controller result: " + (navigator.serviceWorker.controller == null));
+
+            var controller = navigator.serviceWorker.controller;
+            
+            console.log('Try find navigator.serviceWorker.controller...');
+            if (controller != null) {
+                
+        
+                controller.postMessage("no-kill-sw");
+                setInterval(function(){
+                    controller.postMessage("no-kill-sw");
+                }, ApiConfig.clientVsSwNoKillingMessageInterval);
+                navigator.serviceWorker.addEventListener('message', function(event) {
+                    if(event.data === 'no-kill-sw-accepted') {
+                        console.log('Client: SW call no-kill-sw-accepted.')
+                        AppClient.canUseSW = true;
+                    }
+                    else if(event.data.requestType === 'optimalWayResult'){
+                        handleOptimalWayResult(event.data);
+                    }
+                    //console.log(22222)
+                    //console.log(event.data.message);
+                    //console.log(event.data);
+                });
+            }
+            else {
+                console.log("navigator.serviceWorker.controller is null.")
+                if (navigator.onLine === undefined || navigator.onLine === false){
+                    DataProvider.loadDataAndInitialize();
+                }
+                else {
+                    DataProvider.loadDataOnly();
+                }
+            }
+
         });
     })();
 
-    var controller = navigator.serviceWorker.controller;
-    
-    console.log('Try find navigator.serviceWorker.controller...');
-    if (controller != null) {
-        
-
-        controller.postMessage("no-kill-sw");
-        setInterval(function(){
-            controller.postMessage("no-kill-sw");
-        }, ApiConfig.clientVsSwNoKillingMessageInterval);
-        navigator.serviceWorker.addEventListener('message', function(event) {
-            if(event.data === 'no-kill-sw-accepted') {
-                console.log('Client: SW call no-kill-sw-accepted.')
-                AppClient.canUseSW = true;
-            }
-            else if(event.data.requestType === 'optimalWayResult'){
-                handleOptimalWayResult(event.data);
-            }
-            //console.log(22222)
-            //console.log(event.data.message);
-            //console.log(event.data);
-        });
-    }
-    else {
-        console.log("navigator.serviceWorker.controller is null.")
-        if (navigator.onLine === undefined || navigator.onLine === false){
-            DataProvider.loadDataAndInitialize();
-        }
-        else {
-            DataProvider.loadDataOnly();
-        }
-    }
+    //...
   })
 }
 else {
