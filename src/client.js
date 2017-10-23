@@ -155,7 +155,8 @@ class AppClient {
     static minimalTimeSeconds = 0;
     static minimalGoingTimeSeconds = 0;
     static minimalTransportChangingCount = 0;
-
+    static minimalWaitingTimeSeconds = 0;
+    static minimalRiskTimeSeconds = 0;
 
     static fromPosition = null;
     static toPosition = null;
@@ -209,10 +210,14 @@ class AppClient {
             AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalTimeSeconds);
             AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalGoingTimeSeconds);
             AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[0].totalTransportChangingCount);
+            AppClient.minimalWaitingTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalWaitingTime);
+            AppClient.minimalRiskTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].minimalWaitingTime);
             for (let i = 1; i < AppClient.findedOptimalWays.length; i++) {
                 if (parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) < AppClient.minimalTimeSeconds) AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds);
                 if (parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) < AppClient.minimalGoingTimeSeconds) AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds);
                 if (parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) < AppClient.minimalTransportChangingCount) AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount);
+                if (parseFloat(AppClient.findedOptimalWays[i].totalWaitingTime) < AppClient.minimalWaitingTimeSeconds) AppClient.minimalWaitingTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalWaitingTime);
+                if (parseFloat(AppClient.findedOptimalWays[i].minimalWaitingTime) < AppClient.minimalRiskTimeSeconds) AppClient.minimalRiskTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].minimalWaitingTime);
             }
             if (AppClient.minimalTransportChangingCount < 1) AppClient.minimalTransportChangingCount = 1;
         }
