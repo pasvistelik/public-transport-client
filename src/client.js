@@ -132,31 +132,45 @@ class AppClient {
 
     static get totalTimePercentValue(){
         var value = localStorage["totalTimePercentValue"];
-        return (value == null) ? (localStorage["totalTimePercentValue"] = 1) : value;
+        return (value == null) ? (localStorage["totalTimePercentValue"] = 100) : value;
     }
     static set totalTimePercentValue(value){
-        if (value >= 0 && value <= 1) localStorage["totalTimePercentValue"] = value;
+        if (value >= 0 && value <= 100) localStorage["totalTimePercentValue"] = value;
     }
     static get totalGoingTimePercentValue(){
         var value = localStorage["totalGoingTimePercentValue"];
-        return (value == null) ? (localStorage["totalGoingTimePercentValue"] = 1) : value;
+        return (value == null) ? (localStorage["totalGoingTimePercentValue"] = 100) : value;
     }
     static set totalGoingTimePercentValue(value){
-        if (value >= 0 && value <= 1) localStorage["totalGoingTimePercentValue"] = value;
+        if (value >= 0 && value <= 100) localStorage["totalGoingTimePercentValue"] = value;
     }
     static get totalTransportChangingCountPercentValue(){
         var value = localStorage["totalTransportChangingCountPercentValue"];
-        return (value == null) ? (localStorage["totalTransportChangingCountPercentValue"] = 1) : value;
+        return (value == null) ? (localStorage["totalTransportChangingCountPercentValue"] = 100) : value;
     }
     static set totalTransportChangingCountPercentValue(value){
-        if (value >= 0 && value <= 1) localStorage["totalTransportChangingCountPercentValue"] = value;
+        if (value >= 0 && value <= 100) localStorage["totalTransportChangingCountPercentValue"] = value;
+    }
+    static get totalWaitingTimePercentValue(){
+        var value = localStorage["totalWaitingTimePercentValue"];
+        return (value == null) ? (localStorage["totalWaitingTimePercentValue"] = 100) : value;
+    }
+    static set totalWaitingTimePercentValue(value){
+        if (value >= 0 && value <= 100) localStorage["totalWaitingTimePercentValue"] = value;
+    }
+    static get riskPercentValue(){
+        var value = localStorage["riskPercentValue"];
+        return (value == null) ? (localStorage["riskPercentValue"] = 100) : value;
+    }
+    static set riskPercentValue(value){
+        if (value >= 0 && value <= 100) localStorage["riskPercentValue"] = value;
     }
 
     static minimalTimeSeconds = 0;
     static minimalGoingTimeSeconds = 0;
     static minimalTransportChangingCount = 0;
     static minimalWaitingTimeSeconds = 0;
-    static minimalRiskTimeSeconds = 0;
+    //static minimalRiskTimeSeconds = 0;
 
     static fromPosition = null;
     static toPosition = null;
@@ -211,13 +225,13 @@ class AppClient {
             AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalGoingTimeSeconds);
             AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[0].totalTransportChangingCount);
             AppClient.minimalWaitingTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalWaitingTime);
-            AppClient.minimalRiskTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].minimalWaitingTime);
+            //AppClient.minimalRiskTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].minimalWaitingTime);
             for (let i = 1; i < AppClient.findedOptimalWays.length; i++) {
                 if (parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) < AppClient.minimalTimeSeconds) AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds);
                 if (parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) < AppClient.minimalGoingTimeSeconds) AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds);
                 if (parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) < AppClient.minimalTransportChangingCount) AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount);
                 if (parseFloat(AppClient.findedOptimalWays[i].totalWaitingTime) < AppClient.minimalWaitingTimeSeconds) AppClient.minimalWaitingTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalWaitingTime);
-                if (parseFloat(AppClient.findedOptimalWays[i].minimalWaitingTime) < AppClient.minimalRiskTimeSeconds) AppClient.minimalRiskTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].minimalWaitingTime);
+                //if (parseFloat(AppClient.findedOptimalWays[i].minimalWaitingTime) < AppClient.minimalRiskTimeSeconds) AppClient.minimalRiskTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].minimalWaitingTime);
             }
             if (AppClient.minimalTransportChangingCount < 1) AppClient.minimalTransportChangingCount = 1;
         }
@@ -226,11 +240,13 @@ class AppClient {
     }
 
     // Sort the finded ways with the importance of each criterion.
-    static customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue) {
+    static customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue, totalWaitingTimePercentValue, riskPercentValue) {
         if (AppClient.findedOptimalWays != null) {
             AppClient.totalTimePercentValue = totalTimePercentValue;
             AppClient.totalGoingTimePercentValue = totalGoingTimePercentValue;
             AppClient.totalTransportChangingCountPercentValue = totalTransportChangingCountPercentValue;
+            AppClient.totalWaitingTimePercentValue = totalWaitingTimePercentValue;
+            AppClient.riskPercentValue = riskPercentValue;
 
             let sortedArr = [];
             let newSortedFindedWays = [];
@@ -244,7 +260,15 @@ class AppClient {
                 for (let i = 0; i < AppClient.findedOptimalWays.length; i++) {
                     if (sortedArr.indexOf(i) === -1) {
                         tmpTransportChangingCountEffictivity = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) === 0 ? 1 : (AppClient.minimalTransportChangingCount / parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount));
-                        var tmp_rank = AppClient.minimalTimeSeconds / parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) * totalTimePercentValue + AppClient.minimalGoingTimeSeconds / parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) * totalGoingTimePercentValue + tmpTransportChangingCountEffictivity * totalTransportChangingCountPercentValue;
+                        
+                        let totalTimeRank = AppClient.minimalTimeSeconds / parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) * totalTimePercentValue;
+                        let totalGoingTimeRank = AppClient.minimalGoingTimeSeconds / parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) * totalGoingTimePercentValue;
+                        let totalTransportChangingCountRank = tmpTransportChangingCountEffictivity * totalTransportChangingCountPercentValue;
+                        //let totalWaitingTimeRank = AppClient.minimalWaitingTimeSeconds / parseFloat(AppClient.findedOptimalWays[i].totalWaitingTime) * totalWaitingTimePercentValue;
+                        let totalWaitingTimeRank = (1 - parseFloat(AppClient.findedOptimalWays[i].totalWaitingTime) / parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds)) * totalWaitingTimePercentValue;
+                        let totalRiskRank = parseFloat(AppClient.findedOptimalWays[i].riskEffectivity) * riskPercentValue;
+
+                        var tmp_rank = totalTimeRank + totalGoingTimeRank + totalTransportChangingCountRank + totalWaitingTimeRank + totalRiskRank;
                         if (tmp_rank >= max_rank) {
                             max_rank = tmp_rank;
                             index = i;
@@ -259,6 +283,8 @@ class AppClient {
                 newSortedFindedWays.push(AppClient.findedOptimalWays[sortedIndex]);
             }
             AppClient.findedOptimalWays = newSortedFindedWays;
+
+            //console.log("Customized with params: "+AppClient.totalTimePercentValue+", "+AppClient.totalGoingTimePercentValue+", "+AppClient.totalTransportChangingCountPercentValue+", "+AppClient.totalWaitingTimePercentValue+", "+AppClient.riskPercentValue);
 
             return AppClient.findedOptimalWays;
         }
@@ -419,9 +445,9 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
                 params.goingSpeed,
                 params.dopTimeMinutes
             );
-            console.log(res);
+            //console.log(res);
             AppClient.findedOptimalWays = res.getOptimalWays();
-            console.log(AppClient.findedOptimalWays);
+            //console.log(AppClient.findedOptimalWays);
         }
         catch (ex){
             console.log(ex);
