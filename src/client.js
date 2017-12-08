@@ -189,7 +189,8 @@ class AppClient {
         return (value == null) ? (localStorage["dopTimeMinutes"] = 3) : value;
     }
     static set dopTimeMinutes(value){
-        if (value >= 0) localStorage["dopTimeMinutes"] = value;
+        //if (value >= 0) 
+        localStorage["dopTimeMinutes"] = value;
     }
 
 
