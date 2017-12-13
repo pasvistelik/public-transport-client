@@ -14,7 +14,7 @@ const urlsToCache = [
   '/asset-manifest.json',
   '/static/js/bundle.js',
   '/static/css/style.css',
-  '/static/images/',
+  '/images/',
   //'/sw.js'
 ];
 
