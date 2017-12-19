@@ -112,7 +112,13 @@ async function setPointAsFavorite(key, favoriteType){
             else point.favorite_type = FavoriteTypes.unclassificed;
             point.last_used = new Date();
             point.key = undefined;
-            var request = objectStore.add(point);
+            var request = objectStore.add({
+                lat: point.lat,
+                lng: point.lng,
+                description: point.description,
+                favorite_type: point.favorite_type,
+                last_used: new Date(),
+            });
             request.onsuccess = async function(event) {
                 await deletePoint(key);
                 resolve(true);
@@ -139,7 +145,13 @@ async function removePointFromFavorites(key){
             point.favorite_type = null;
             point.last_used = new Date();
             point.key = undefined;
-            var request = objectStore.add(point);
+            var request = objectStore.add({
+                lat: point.lat,
+                lng: point.lng,
+                description: point.description,
+                favorite_type: point.favorite_type,
+                last_used: new Date(),
+            });
             request.onsuccess = async function(event) {
                 await deletePoint(key);
                 resolve(true);
