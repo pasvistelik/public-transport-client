@@ -106,12 +106,13 @@ async function setPointAsFavorite(key, favoriteType){
         let objectStore = transaction.objectStore(storeName);
 
         var getPointRequest = objectStore.get(key);
-        getPointRequest.onsuccess = function(){
+        getPointRequest.onsuccess = async function(){
             var point = getPointRequest.result;
             if (favoriteType) point.favorite_type = favoriteType;
             else point.favorite_type = FavoriteTypes.unclassificed;
             point.last_used = new Date();
             point.key = undefined;
+            await deletePoint(key);
             var request = objectStore.add({
                 lat: point.lat,
                 lng: point.lng,
@@ -119,8 +120,7 @@ async function setPointAsFavorite(key, favoriteType){
                 favorite_type: point.favorite_type,
                 last_used: new Date(),
             });
-            request.onsuccess = async function(event) {
-                await deletePoint(key);
+            request.onsuccess = function(event) {
                 resolve(true);
             }
             request.onerror = function(event) {
@@ -140,11 +140,12 @@ async function removePointFromFavorites(key){
         let objectStore = transaction.objectStore(storeName);
 
         var getPointRequest = objectStore.get(key);
-        getPointRequest.onsuccess = function(){
+        getPointRequest.onsuccess = async function(){
             var point = getPointRequest.result;
             point.favorite_type = null;
             point.last_used = new Date();
             point.key = undefined;
+            await deletePoint(key);
             var request = objectStore.add({
                 lat: point.lat,
                 lng: point.lng,
@@ -152,8 +153,7 @@ async function removePointFromFavorites(key){
                 favorite_type: point.favorite_type,
                 last_used: new Date(),
             });
-            request.onsuccess = async function(event) {
-                await deletePoint(key);
+            request.onsuccess = function(event) {
                 resolve(true);
             }
             request.onerror = function(event) {
