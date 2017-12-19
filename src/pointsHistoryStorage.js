@@ -102,34 +102,25 @@ var FavoriteTypes = {
 async function setPointAsFavorite(key, favoriteType){
     let promise = new Promise(async function (resolve, reject) {
         let db = await getPointsHistoryStorageConnection();
-        let transaction = db.transaction([storeName]);
+        let transaction = db.transaction([storeName], "readwrite");
         let objectStore = transaction.objectStore(storeName);
 
-        //create a range from the key
-        objKeyRange = _IDBKeyRange.only(key);
-        //open a cursor of only the record to update
-        objCursor = objStore.openCursor(objKeyRange);
-        objCursor.onsuccess = function(evt){
-            var cursor = evt.target.result;
-
-            var point = cursor.value;
+        var getPointRequest = objectStore.get(key);
+        getPointRequest.onsuccess = function(){
+            var point = getPointRequest.result;
             if (favoriteType) point.favorite_type = favoriteType;
             else point.favorite_type = FavoriteTypes.unclassificed;
             point.last_used = new Date();
-
-            //do the update
-            var objRequest = cursor.update(point);
-            objRequest.onsuccess = function(ev){
+            var request = objectStore.put(point, key);
+            request.onsuccess = function(event) {
                 resolve(true);
-            };
-            objRequest.onerror = function(ev){
-                console.log('Error in updating record '+key);
-                resolve(false);
-            };
+            }
+            request.onerror = function(event) {
+                reject(event.target.error);
+            }
         };
-        objCursor.onerror = function(evt){
-            console.log('Error in retrieving record '+key);
-            resolve(false);
+        getPointRequest.onerror = function(event) {
+            reject(event.target.error);
         };
     });
     return await promise;
@@ -137,33 +128,24 @@ async function setPointAsFavorite(key, favoriteType){
 async function removePointFromFavorites(key){
     let promise = new Promise(async function (resolve, reject) {
         let db = await getPointsHistoryStorageConnection();
-        let transaction = db.transaction([storeName]);
+        let transaction = db.transaction([storeName], "readwrite");
         let objectStore = transaction.objectStore(storeName);
 
-        //create a range from the key
-        objKeyRange = _IDBKeyRange.only(key);
-        //open a cursor of only the record to update
-        objCursor = objStore.openCursor(objKeyRange);
-        objCursor.onsuccess = function(evt){
-            var cursor = evt.target.result;
-
-            var point = cursor.value;
+        var getPointRequest = objectStore.get(key);
+        getPointRequest.onsuccess = function(){
+            var point = getPointRequest.result;
             point.favorite_type = null;
             point.last_used = new Date();
-
-            //do the update
-            var objRequest = cursor.update(point);
-            objRequest.onsuccess = function(ev){
+            var request = objectStore.put(point, key);
+            request.onsuccess = function(event) {
                 resolve(true);
-            };
-            objRequest.onerror = function(ev){
-                console.log('Error in updating record '+key);
-                resolve(false);
-            };
+            }
+            request.onerror = function(event) {
+                reject(event.target.error);
+            }
         };
-        objCursor.onerror = function(evt){
-            console.log('Error in retrieving record '+key);
-            resolve(false);
+        getPointRequest.onerror = function(event) {
+            reject(event.target.error);
         };
     });
     return await promise;
@@ -171,7 +153,7 @@ async function removePointFromFavorites(key){
 async function deletePoint(key){
     let promise = new Promise(async function (resolve, reject) {
         let db = await getPointsHistoryStorageConnection();
-        let transaction = db.transaction([storeName]);
+        let transaction = db.transaction([storeName], "readwrite");
         let objectStore = transaction.objectStore(storeName);
 
         var request = objectStore.delete(key);
