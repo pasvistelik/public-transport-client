@@ -111,6 +111,7 @@ async function setPointAsFavorite(key, favoriteType){
             if (favoriteType) point.favorite_type = favoriteType;
             else point.favorite_type = FavoriteTypes.unclassificed;
             point.last_used = new Date();
+            point.key = undefined;
             var request = objectStore.put(point, key);
             request.onsuccess = function(event) {
                 resolve(true);
@@ -136,6 +137,7 @@ async function removePointFromFavorites(key){
             var point = getPointRequest.result;
             point.favorite_type = null;
             point.last_used = new Date();
+            point.key = undefined;
             var request = objectStore.put(point, key);
             request.onsuccess = function(event) {
                 resolve(true);
