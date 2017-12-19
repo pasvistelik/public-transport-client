@@ -106,13 +106,12 @@ async function setPointAsFavorite(key, favoriteType){
         let objectStore = transaction.objectStore(storeName);
 
         var getPointRequest = objectStore.get(key);
-        getPointRequest.onsuccess = async function(){
+        getPointRequest.onsuccess = function(){
             var point = getPointRequest.result;
             if (favoriteType) point.favorite_type = favoriteType;
             else point.favorite_type = FavoriteTypes.unclassificed;
             point.last_used = new Date();
             point.key = undefined;
-            await deletePoint(key);
             var request = objectStore.add({
                 lat: point.lat,
                 lng: point.lng,
@@ -140,12 +139,11 @@ async function removePointFromFavorites(key){
         let objectStore = transaction.objectStore(storeName);
 
         var getPointRequest = objectStore.get(key);
-        getPointRequest.onsuccess = async function(){
+        getPointRequest.onsuccess = function(){
             var point = getPointRequest.result;
             point.favorite_type = null;
             point.last_used = new Date();
             point.key = undefined;
-            await deletePoint(key);
             var request = objectStore.add({
                 lat: point.lat,
                 lng: point.lng,
@@ -201,6 +199,7 @@ class PointsHistoryStorage {
 
     static async setPointAsFavorite(key) {
         try {
+            await deletePoint(key);
             return await setPointAsFavorite(key);
         }
         catch(e){
@@ -210,6 +209,7 @@ class PointsHistoryStorage {
     }
     static async removePointFromFavorites(key) {
         try {
+            await deletePoint(key);
             return await removePointFromFavorites(key);
         }
         catch(e){
