@@ -15,7 +15,7 @@ async function getPointsHistoryStorageConnection() {
         request.onupgradeneeded = async function(event) {
             let db = event.target.result;
             let objectStore = db.createObjectStore(storeName, { keyPath: "key", autoIncrement:true});
-            objectStore.createIndex("description", "description", { unique: true });
+            objectStore.createIndex("description", "description", { unique: false });
             objectStore.createIndex("lat", "lat", { unique: false });
             objectStore.createIndex("lng", "lng", { unique: false });
             objectStore.createIndex("favorite_type", "favorite_type", { unique: false });
@@ -119,7 +119,8 @@ async function setPointAsFavorite(key, favoriteType){
                 favorite_type: point.favorite_type,
                 last_used: new Date(),
             });
-            request.onsuccess = function(event) {
+            request.onsuccess = async function(event) {
+                await deletePoint(key);
                 resolve(true);
             }
             request.onerror = function(event) {
@@ -151,7 +152,8 @@ async function removePointFromFavorites(key){
                 favorite_type: point.favorite_type,
                 last_used: new Date(),
             });
-            request.onsuccess = function(event) {
+            request.onsuccess = async function(event) {
+                await deletePoint(key);
                 resolve(true);
             }
             request.onerror = function(event) {
@@ -199,7 +201,6 @@ class PointsHistoryStorage {
 
     static async setPointAsFavorite(key) {
         try {
-            await deletePoint(key);
             return await setPointAsFavorite(key);
         }
         catch(e){
@@ -209,7 +210,6 @@ class PointsHistoryStorage {
     }
     static async removePointFromFavorites(key) {
         try {
-            await deletePoint(key);
             return await removePointFromFavorites(key);
         }
         catch(e){
