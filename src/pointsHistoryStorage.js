@@ -18,6 +18,8 @@ async function getPointsHistoryStorageConnection() {
             objectStore.createIndex("description", "description", { unique: true });
             objectStore.createIndex("lat", "lat", { unique: false });
             objectStore.createIndex("lng", "lng", { unique: false });
+            objectStore.createIndex("favorite_type", "favorite_type", { unique: false });
+            objectStore.createIndex("last_used", "last_used", { unique: false });
             
             let result = await getPointsHistoryStorageConnection();
             resolve(result);
@@ -77,7 +79,9 @@ async function tryPush(point) {
         let request = objectStore.add({
             lat: point.coords.lat,
             lng: point.coords.lng,
-            description: point.description
+            description: point.description,
+            favorite_type: null,
+            last_used: new Date(),
         });
         request.onerror = function(event) {
             reject(event.target.error);
@@ -89,6 +93,102 @@ async function tryPush(point) {
     return await promise;
 }
 
+var FavoriteTypes = {
+    unclassificed: 0,
+    home: 1,
+    job: 2
+};
+
+async function setPointAsFavorite(key, favoriteType){
+    let promise = new Promise(async function (resolve, reject) {
+        let db = await getPointsHistoryStorageConnection();
+        let transaction = db.transaction([storeName]);
+        let objectStore = transaction.objectStore(storeName);
+
+        //create a range from the key
+        objKeyRange = _IDBKeyRange.only(key);
+        //open a cursor of only the record to update
+        objCursor = objStore.openCursor(objKeyRange);
+        objCursor.onsuccess = function(evt){
+            var cursor = evt.target.result;
+
+            var point = cursor.value;
+            if (favoriteType) point.favorite_type = favoriteType;
+            else point.favorite_type = FavoriteTypes.unclassificed;
+            point.last_used = new Date();
+
+            //do the update
+            var objRequest = cursor.update(point);
+            objRequest.onsuccess = function(ev){
+                resolve(true);
+            };
+            objRequest.onerror = function(ev){
+                console.log('Error in updating record '+key);
+                resolve(false);
+            };
+        };
+        objCursor.onerror = function(evt){
+            console.log('Error in retrieving record '+key);
+            resolve(false);
+        };
+    });
+    return await promise;
+}
+async function removePointFromFavorites(key){
+    let promise = new Promise(async function (resolve, reject) {
+        let db = await getPointsHistoryStorageConnection();
+        let transaction = db.transaction([storeName]);
+        let objectStore = transaction.objectStore(storeName);
+
+        //create a range from the key
+        objKeyRange = _IDBKeyRange.only(key);
+        //open a cursor of only the record to update
+        objCursor = objStore.openCursor(objKeyRange);
+        objCursor.onsuccess = function(evt){
+            var cursor = evt.target.result;
+
+            var point = cursor.value;
+            point.favorite_type = null;
+            point.last_used = new Date();
+
+            //do the update
+            var objRequest = cursor.update(point);
+            objRequest.onsuccess = function(ev){
+                resolve(true);
+            };
+            objRequest.onerror = function(ev){
+                console.log('Error in updating record '+key);
+                resolve(false);
+            };
+        };
+        objCursor.onerror = function(evt){
+            console.log('Error in retrieving record '+key);
+            resolve(false);
+        };
+    });
+    return await promise;
+}
+async function deletePoint(key){
+    let promise = new Promise(async function (resolve, reject) {
+        let db = await getPointsHistoryStorageConnection();
+        let transaction = db.transaction([storeName]);
+        let objectStore = transaction.objectStore(storeName);
+
+        var request = objectStore.delete(key);
+        request.onerror = function(event) {
+            reject(event.target.error);
+        }
+        request.onsuccess = function(event) {
+            resolve(true);
+        }
+    });
+    return await promise;
+}
+
+
+
+
+
 
 class PointsHistoryStorage {
     static async getAllPoints() {
@@ -99,6 +199,34 @@ class PointsHistoryStorage {
     }
     static async tryFindByCoords(coords) {
         return await tryFindByCoords(coords);
+    }
+
+    static async setPointAsFavorite(key) {
+        try {
+            return await setPointAsFavorite(key);
+        }
+        catch(e){
+            console.log(e);
+            return false;
+        }
+    }
+    static async removePointFromFavorites(key) {
+        try {
+            return await removePointFromFavorites(key);
+        }
+        catch(e){
+            console.log(e);
+            return false;
+        }
+    }
+    static async deletePoint(key) {
+        try {
+            return await deletePoint(key);
+        }
+        catch(e){
+            console.log(e);
+            return false;
+        }
     }
 }
 
