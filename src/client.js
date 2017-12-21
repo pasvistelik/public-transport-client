@@ -118,7 +118,7 @@ class AppClient {
 
     static get isNeedCountingOnServer(){
         var value = localStorage["isNeedCountingOnServer"];
-        return (value == null) ? JSON.parse(localStorage["isNeedCountingOnServer"] = true) : JSON.parse(value);
+        return (value == null) ? JSON.parse(localStorage["isNeedCountingOnServer"] = false) : JSON.parse(value);
     }
     static set isNeedCountingOnServer(value){
         if (value === JSON.stringify(true) || value === JSON.stringify(false)) localStorage["isNeedCountingOnServer"] = JSON.stringify(value);
@@ -186,7 +186,7 @@ class AppClient {
     }
     static get dopTimeMinutes(){
         var value = localStorage["dopTimeMinutes"];
-        return (value == null) ? (localStorage["dopTimeMinutes"] = 3) : value;
+        return (value == null) ? (localStorage["dopTimeMinutes"] = 0.5) : value;
     }
     static set dopTimeMinutes(value){
         //if (value >= 0) 
